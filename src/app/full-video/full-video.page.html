@@ -1,0 +1,46 @@
+<ion-content class="backbg container-full-video">
+<!-- final screen -->
+ <div [style.height.px]="100" class="overlay2">
+ 	 <ion-buttons class="overlay_cross_button" (click)="close_vid()"  slot="start" >
+	   <ion-icon name="close-circle-outline" ></ion-icon>
+	 </ion-buttons>
+
+</div>
+<!-- video play -->
+<div class="bg_image" *ngIf="timer_display" [style.background-image]="'url(' + thumbnail_url+ ')'">
+	
+<div class="arrow_Play" *ngIf="timer_display" >
+	<div class="inner_text">
+	<div class="inner_Heading">
+		<!-- Your video will start in -->
+		<!-- Get Ready For WarmUp in <br> {{counter}} Sec.! -->
+		Preparing Your Warm Up Exercise - Get Ready <br>
+		<span style="color: #4DD0E1 !important; font-size: 6vh;">{{counter}}</span>
+
+	</div>
+	<div class="inner_counter">
+		 
+
+	
+	</div>
+	</div>
+</div>
+</div>
+<!-- <ion-icon  name="play" (click)="playVid()" class="arrow_Play" *ngIf="visiblePlay"  > </ion-icon> -->
+<div class="div-full-video" [style.background-image]="'url(' + thumbnail_url+ ')'">
+  <app-htmlvideo *ngIf="vid_type=='warmup'" [change]="change" [videos]="vid_array" [video_url]="video_url" [poster]="thumbnail_url" loop="true" autoplay="true" #videotemp></app-htmlvideo>
+  
+  <app-htmlvideo *ngIf="vid_type!='warmup'" [video_url]="video_url" [poster]="thumbnail_url" loop="true" autoplay="true"></app-htmlvideo>
+</div>
+</ion-content>
+<!-- <div class="arrow_div" *ngIf="show_arrow" >
+  <ion-icon  name="arrow-back" class="arrow_back" (click)="swipeVideoPrevious()"> </ion-icon>
+  <ion-icon (click)="swipeVideoNext()" name="arrow-forward"  class="arrrow_forward" > </ion-icon>
+</div> -->
+
+<!--
+[poster]="thumbnail_url"
+background-image: url(&quot;http://fitapp.web-brats.com/uploads/images/1564228459.jpg&quot;);
+
+<app-htmlvideo [video_url]="video_url" [poster]="thumbnail_url" loop="true" autoplay="true"></app-htmlvideo>
+-->

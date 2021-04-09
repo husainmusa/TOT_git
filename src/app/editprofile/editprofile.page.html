@@ -1,0 +1,232 @@
+<ion-header >
+	<ion-toolbar>
+		 <ion-title text-center><h5>Edit Profile</h5></ion-title>
+	     <ion-buttons (click)="navigaToback()" slot="start" >
+	       <ion-icon style="font-size: 150%;" name="arrow-back"></ion-icon>
+	    </ion-buttons>
+	</ion-toolbar>
+</ion-header>
+<ion-content fullscreen="true" force-overscroll="true">
+<form  [formGroup]="onEditForm" class="list-form">
+  <ion-list>
+  	<ion-col size="7" align-self-center>
+        <ion-item lines="none">
+                <ion-avatar class="myava2" slot="start">
+                  <img src="{{userImage}}" />
+                </ion-avatar>
+                <ion-label (click)="presentActionSheet()" class="edit_image" >
+                  <ion-icon name="create"></ion-icon>
+                </ion-label>
+        </ion-item>
+    </ion-col>
+
+  <ion-item-divider color="light">
+	  <ion-label>USER PROFILE</ion-label>
+  </ion-item-divider>
+
+  <ion-item class="edit_list">
+	  <ion-label >Name</ion-label>
+	  <ion-input  type="text"   formControlName="name" required></ion-input>
+  </ion-item>
+  <p no-padding no-margin text-center *ngIf="onEditForm.get('name').touched && onEditForm.get('name').hasError('required')">
+	  <ion-text  color="danger" >
+	    <small>This field is required</small>
+	  </ion-text>
+  </p>
+
+  <ion-item class="edit_list">
+	  <ion-label floating primary>E-Mail</ion-label>
+	  <ion-input formControlName="email" type="text"  required></ion-input>
+  </ion-item>
+   <p no-padding no-margin text-center *ngIf="onEditForm.get('email').touched && onEditForm.get('email').hasError('required')">
+	  <ion-text  color="danger" >
+	    <small>This field is required</small>
+	  </ion-text>
+  </p>
+	<ion-item  class="edit_list">
+		<ion-label floating primary>Gender</ion-label>
+		<ion-select  formControlName="gender" placeholder="Select One"   (ionChange)="showWomenStatus($event)" required>
+				<ion-select-option value="female">Female</ion-select-option>
+				<ion-select-option value="male">Male</ion-select-option>
+			</ion-select>
+	</ion-item>
+	 <p no-padding no-margin text-center *ngIf="onEditForm.get('gender').touched && onEditForm.get('gender').hasError('required')">
+		<ion-text  color="danger" >
+			<small>This field is required</small>
+		</ion-text>
+	</p>
+
+	<ion-item class="edit_list">
+	  <ion-label floating primary>Level</ion-label>
+	  <ion-select formControlName="fitness_level" placeholder="Select" required>
+	      <ion-select-option value="beginner" >Beginner</ion-select-option>
+	      <ion-select-option value="experienced">Experienced</ion-select-option>
+	      <ion-select-option value="athletic">Athletic</ion-select-option>
+	    </ion-select>
+  </ion-item>
+   <p no-padding no-margin text-center *ngIf="onEditForm.get('fitness_level').touched && onEditForm.get('fitness_level').hasError('required')">
+	  <ion-text  color="danger" >
+	    <small>This field is required</small>
+	  </ion-text>
+  </p>
+
+  <ion-item class="edit_list">
+	  <ion-label  floating primary>Goals</ion-label>
+	  <ion-select formControlName="interested_in" placeholder="Select" required>
+	      <ion-select-option value="lose weight">Lose weight</ion-select-option>
+	      <ion-select-option value="stay in shape">Stay in shape</ion-select-option>
+	      <ion-select-option value="gain muscle" >Gain muscle</ion-select-option>
+	  </ion-select>
+  </ion-item>
+   <p no-padding no-margin text-center *ngIf="onEditForm.get('interested_in').touched && onEditForm.get('interested_in').hasError('required')">
+	  <ion-text  color="danger" >
+	    <small>This field is required</small>
+	  </ion-text>
+  </p>
+
+  <ion-item class="edit_list" *ngIf="show_women_status">
+	  <ion-label style="">
+	  Status</ion-label>
+	   <ion-select formControlName="women_status"   placeholder="Select" >
+	      <ion-select-option value="currently pregnant">Currently pregnant</ion-select-option>
+	      <ion-select-option value="recently gave birth">Recently gave birth</ion-select-option>
+	      <ion-select-option value="pre pregnancy">Pre pregnancy</ion-select-option>
+	      <ion-select-option value="post pregnancy">Post pregnancy</ion-select-option>
+	      <ion-select-option value="not applicable">Not applicable</ion-select-option>
+	  </ion-select>
+  </ion-item>
+  <ion-item class="edit_list">
+	  <ion-label floating primary>Age</ion-label>
+	  <ion-input formControlName="age" type="tel" required></ion-input>
+  </ion-item>
+   <p no-padding no-margin text-center *ngIf="onEditForm.get('age').touched && onEditForm.get('age').hasError('required')">
+	  <ion-text  color="danger" >
+	    <small>This field is required</small>
+	  </ion-text>
+  </p>
+  <ion-item  class="edit_list">
+			<ion-label floating primary>Height</ion-label>
+			<!--<ion-input formControlName="body_height" (keypress)="IsNumeric($event,6)" type="number"  name="body_height"  placeholder="Height" required></ion-input>
+			<ion-select [interfaceOptions]="cssOptions" id="height_unit" slot="end" formControlName="height_unit"  name="height_unit"  placeholder="Height"  required>
+				<ion-select-option value="FEET">Feet</ion-select-option>
+				<ion-select-option value="CM" selected>CM</ion-select-option>
+			</ion-select>-->
+  </ion-item>
+	<ion-item  class="edit_list">
+		<ion-row  class="hor-div ion-justify-content-start align-items-stretch">
+
+			<ion-col size="4.5" *ngIf="onEditForm.value.height_unit=='FEET'">
+				<ion-select style="width:73%;" formControlName="height_feet"  name="height_feet"  placeholder="Height Feet"  required>
+					<ion-select-option value="3">3 Feet</ion-select-option>
+					<ion-select-option value="4" selected>4 Feet</ion-select-option>
+					<ion-select-option value="5">5 Feet</ion-select-option>
+					<ion-select-option value="6">6 Feet</ion-select-option>
+					<ion-select-option value="7">7 Feet</ion-select-option>
+					<ion-select-option value="8">8 Feet</ion-select-option>
+					<ion-select-option value="9">9 Feet</ion-select-option>
+					<ion-select-option value="10">10 Feet</ion-select-option>
+				</ion-select>
+			</ion-col>
+			<ion-col size="5.5" *ngIf="onEditForm.value.height_unit=='FEET'">
+				<ion-select style="width:56%;" formControlName="height_inches" name="height_inches"  placeholder="Height Inchaes"  required>
+					<ion-select-option value="0">0 Inches</ion-select-option>
+					<ion-select-option value="1">1 Inches</ion-select-option>
+					<ion-select-option value="2" selected>2 Inches</ion-select-option>
+					<ion-select-option value="3">3 Inches</ion-select-option>
+					<ion-select-option value="4">4 Inches</ion-select-option>
+					<ion-select-option value="5">5 Inches</ion-select-option>
+					<ion-select-option value="6">6 Inches</ion-select-option>
+					<ion-select-option value="7">7 Inches</ion-select-option>
+					<ion-select-option value="8">8 Inches</ion-select-option>
+					<ion-select-option value="9">9 Inches</ion-select-option>
+					<ion-select-option value="10">10 Inches</ion-select-option>
+					<ion-select-option value="11">11 Inches</ion-select-option>
+				</ion-select>
+			</ion-col>
+
+			<ion-col size="10" *ngIf="onEditForm.value.height_unit=='CM'">
+				<ion-input formControlName="body_height" (keypress)="IsNumeric($event,6)" type="number"  name="body_height"  placeholder="Height" required></ion-input>
+			</ion-col>
+			<ion-col size="2" style="">
+				<ion-select formControlName="height_unit"  name="height_unit"  placeholder="Height"  required>
+					<ion-select-option value="FEET">Feet</ion-select-option>
+					<ion-select-option value="CM" selected>CM</ion-select-option>
+				</ion-select>
+			</ion-col>
+		</ion-row>
+  </ion-item>
+		<p class="text08" no-padding no-margin text-left *ngIf="onEditForm.get('body_height').touched && onEditForm.get('body_height').hasError('required')">
+			<ion-text  color="danger">
+				<small>Height is required</small>
+			</ion-text>
+	 </p>
+
+
+  <ion-item  class="edit_list">
+	  <ion-label style="width: 45% !important;" floating primary>Previous Weight</ion-label>
+		<ion-input formControlName="body_weight" type="tel" (keypress)="IsNumeric($event,3)"  name="body_weight"  placeholder="Weight"    required></ion-input>
+		<ion-select [interfaceOptions]="cssOptions" id="weight_unit" slot="end" formControlName="weight_unit"  name="weight_unit"  placeholder="Unit"  required>
+      <ion-select-option value="KG" selected>KG</ion-select-option>
+      <ion-select-option value="LBS">LBS</ion-select-option>
+    </ion-select>
+  </ion-item>
+	<p no-padding no-margin text-center *ngIf="onEditForm.get('body_weight').touched && onEditForm.get('body_weight').hasError('required')">
+	 <ion-text  color="danger" >
+		 <small>This field is required</small>
+	 </ion-text>
+ </p>
+
+	<ion-item  class="edit_list">
+		<ion-label floating primary>Current Weight</ion-label>
+		<ion-input formControlName="current_weight" type="tel" (keypress)="IsNumeric($event,3)"   name="body_weight"  placeholder="Weight"    required></ion-input>
+		<!-- <ion-select [interfaceOptions]="cssOptions" id="weight_unit" slot="end" formControlName="cweight_unit"  name="weight_unit"  placeholder="Unit"  required>
+			<ion-select-option value="{{currentweightUnit}}" selected>{{currentweightUnit}}</ion-select-option>
+		</ion-select> -->
+	</ion-item>
+
+
+  <ion-item  class="edit_list">
+	  <ion-label style="width: 45% !important;" floating primary>Target Weight</ion-label>
+	  <ion-input  formControlName="targeted_weight"  (keypress)="IsNumeric($event,3)"  type="tel" ></ion-input>
+		<ion-select [interfaceOptions]="cssOptions" id="target_weight_unit" slot="end" formControlName="target_weight_unit"  name="target_weight_unit"  placeholder="Unit"  >
+      <ion-select-option value="KG" selected>KG</ion-select-option>
+      <ion-select-option value="LBS">LBS</ion-select-option>
+    </ion-select>
+  </ion-item>
+   <p no-padding no-margin text-center *ngIf="onEditForm.get('targeted_weight').touched && onEditForm.get('interested_in').value !='stay in shape' && onEditForm.get('targeted_weight').hasError('required')">
+	  <ion-text  color="danger" >
+	    <small>This field is required</small>
+	  </ion-text>
+  </p>
+
+	<ion-item-divider color="light" style="margin-top:10px;">
+	  <ion-label>Change Password</ion-label>
+  </ion-item-divider>
+
+	<ion-item class="edit_list">
+		<ion-input name="password" type="password" formControlName="password"  placeholder="Password"></ion-input>
+	</ion-item>
+
+	<p  no-padding no-margin text-center *ngIf="onEditForm.get('password').touched && onEditForm.get('password').hasError('minlength')">
+		 <ion-text  color="danger">
+			 <small>Passord is too short.. password must be have atleast 6 chatacters</small>
+		 </ion-text>
+	</p>
+
+	<ion-item class="edit_list">
+		<ion-input formControlName="password_confirmation"   name="password_confirmation" type="password" placeholder="Retype-Password"></ion-input>
+	</ion-item>
+	<p no-padding no-margin text-center *ngIf="onEditForm.get('password').touched && onEditForm.get('password').hasError('minlength')">
+		 <ion-text  color="danger">
+			 <small>password does not match</small>
+		 </ion-text>
+	</p>
+
+
+
+
+  </ion-list>
+ <ion-button  (click)="editUserData()" expand="full" type="submit" color="primary">Save</ion-button>
+
+</form>
+</ion-content>

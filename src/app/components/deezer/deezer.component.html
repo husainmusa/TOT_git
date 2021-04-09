@@ -1,0 +1,33 @@
+<ion-row style="text-align:center; z-index:11; padding-top:2%">
+  <ion-col size="3">
+    <div class="">
+      <ion-fab-button class="rewind" (click)="previous()">
+      &nbsp;&nbsp;<ion-icon name="skip-backward" style="color: black;"></ion-icon>&nbsp;&nbsp;
+      </ion-fab-button>
+    </div>
+  </ion-col>
+
+  <ion-col size="6">
+    <div class="">
+      <ion-button class="play_pause_btn" *ngIf="paused" (click)="play()" color="light"  justify-content-center align-items-center>
+        <ion-icon name="play" class="darkColor"></ion-icon>
+      </ion-button>
+
+      <ion-button class="play_pause_btn" *ngIf="playing" (click)="pause()" color="light" justify-content-center align-items-center>
+       <ion-icon name="pause" class="darkColor"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-col >
+
+  <ion-col size="3">
+    <div class="">
+      <ion-fab-button class="fastforward" (click)="next()">
+      &nbsp;&nbsp;<ion-icon name="skip-forward" style="color: black;"></ion-icon>&nbsp;&nbsp;
+      </ion-fab-button>
+    </div>
+  </ion-col>
+
+  <!-- <ion-col size="2" style="text-align:center; z-index:11;">
+     <ion-icon class="infinite" name="infinite"></ion-icon>
+  </ion-col> -->
+</ion-row>

@@ -1,0 +1,27 @@
+dsfsdf
+https://www.tunemymusic.com/?share=0zzx1mfuf9br
+https://open.spotify.com/track/3pXF1nA74528Edde4of9CC
+
+
+
+ 	<iframe  src="https://open.spotify.com/embed/album/5gV5YLk7ehBmnLzoj1ftOo" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+ 	const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json',
+    'Authorization': 'my-auth-token'
+  })
+};
+
+<iframe src="https://open.spotify.com/embed/album/1DFixLWuPkv3KT3TnV35m3" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+ 	<iframe *ngIf="url"  [src]="url | safepipe" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+ 	<iframe src="https://open.spotify.com/embed?uri=spotify%3Atrack%3A3pXF1nA74528Edde4of9CC" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+ 	 	<iframe *ngIf="url"  [src]="url  | safepipe" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+ 	 	<iframe src="https://open.spotify.com/?uri=spotify:album:5gV5YLk7ehBmnLzoj1ftOo" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+ 	 	 signatures do not match the previously installed version; ignoring!]
+[ERROR] An error occurred while running subprocess cordova.

@@ -1,0 +1,45 @@
+
+<ion-header >
+  <ion-toolbar>
+     <ion-title text-center><h5>Payment</h5></ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-list>
+    <ion-item-divider color="light">
+  	  <ion-label>PLAN DETAILS</ion-label>
+    </ion-item-divider>
+
+    <ion-item class="edit_list">
+  	  <ion-label >Amount</ion-label>
+  	  <ion-input  type="text"   value="{{planDetail.plan_currency}}&nbsp;{{planDetail.plan_amt}}" readonly></ion-input>
+    </ion-item>
+
+    <ion-item class="edit_list">
+  	  <ion-label >Discount</ion-label>
+  	  <ion-input  type="text"   value="{{planDetail.plan_discount}} %" readonly></ion-input>
+    </ion-item>
+    <ion-item class="edit_list">
+  	  <ion-label >Amount Pay</ion-label>
+  	  <ion-input  type="text"   value="{{planDetail.plan_currency}}&nbsp;{{planDetail.actual_amt}}" readonly></ion-input>
+    </ion-item>
+
+    <ion-item class="edit_list">
+  	  <ion-label >Validity</ion-label>
+  	  <ion-input  type="text" value="{{planDetail.plan_validity}} Days" readonly></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-grid>
+		<ion-row>
+			<ion-col size="12" >
+				<ion-button expand="block" (click)="userPayment()">Pay:  {{planDetail.plan_currency}}&nbsp;{{planDetail.actual_amt}}</ion-button>
+			</ion-col>
+      <ion-col size="12">
+        <ion-button expand="block" color="danger" (click)="cancelPayment()">Cancel</ion-button>
+      </ion-col>
+		</ion-row>
+	</ion-grid>
+  
+</ion-content>

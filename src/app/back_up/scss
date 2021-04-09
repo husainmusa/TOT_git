@@ -1,0 +1,64 @@
+ion-item{
+	--border-color: transparent;
+	--padding-start: 8px;
+    --inner-padding-end: 8px;	
+	ion-grid{
+		--padding-start: 16px!important;
+    	--inner-padding-end: 16px!important;
+		ion-row:not(.info){
+			--padding-start: 0px!important;
+    		--inner-padding-end: 0px!important;
+    		margin: 10px 0px;
+		    border: 2px solid #ff4f55;
+		    border-radius: 25px;
+		    padding: 0px 10px;
+		    outline: none;
+		}
+		ion-row.info {
+			--padding-start: 0px!important;
+    		--inner-padding-end: 0px!important;
+    		ion-col {
+				--padding-start: 0px!important;
+	    		--inner-padding-end: 0px!important;
+	    		h5{
+					font-weight: bold;					
+					margin: 0px;
+				}
+			}
+		}
+		ion-row {
+			h6{
+				color:#ff4f55;
+				font-weight:bold;
+			}
+			img{
+				width:70px;
+				margin-top:10px;
+			}
+		}
+		
+	}
+}
+
+@keyframes zoomIn {
+from {transform:  scale(0.1)}             
+to {transform:  scale(1)} 
+}
+.anim-title{
+	animation-name: zoomIn;
+    -webkit-animation-name: zoomIn;
+    animation-duration: 1s;
+    -webkit-animation-duration: 1s;  
+     animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
+	animation-delay: 2s;
+	-webkit-animation-delay: 2s; 
+	 margin:auto;
+	--border-color: transparent;
+	font-size: 22px;
+	transform:  scale(0);	
+	animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+	-webkitanimation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+	font-weight:bold;
+	color:#009fee;
+}_

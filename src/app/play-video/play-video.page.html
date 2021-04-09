@@ -1,0 +1,262 @@
+<ion-content class="playVideoContent">
+  <app-deezer *ngIf="visiblePlayerDeezer" class="applesong" [status]='status'></app-deezer>
+  <app-spotifysong *ngIf="visiblePlayerSpotify" class="applesong" [status]='status'></app-spotifysong>
+  <app-androidaudio *ngIf="visiblePlayerAndroid" class="applesong" [status]='status'></app-androidaudio>
+<!-- first screen	 before play workout-->
+ <div class="{{classOverlay}}" *ngIf="overlay">
+   <!-- TOTO APPLY PLAER -->
+   <div class="outer">
+     <div class="inner">
+       <ion-buttons class="overlay_cross_button" (click)="close_vid()"  slot="start" >
+        <ion-icon name="close-circle-outline" ></ion-icon>
+      </ion-buttons>
+     </div>
+     <div class="inner" style="width:80%;">
+       <div class="text" *ngIf="hide_content && showSpecialNote==1 && specialNote" [innerHTML]="specialNote"></div>
+     </div>
+     <div class="inner">
+        <ion-button *ngIf="hide_content" class="overlay_start_button" size="small" (click)="start_vid()"  color="tertiary" slot="end">START</ion-button>
+     </div>
+   </div>
+
+   <div class="note" *ngIf="hide_content && showWarning==1 && warningNote" [innerHTML]="warningNote">
+     <!--<strong>NOTE:</strong><br>
+     <p>Please do not change apps for more than a few seconds, o llock your screen.</p>
+     <p>Else, your working may terminaate unexpectedly.</p>-->
+   </div>
+   <h1 class="timer_display" *ngIf="timer_display">{{counter}}</h1>
+
+   <!-- <div class="vid_description" > -->
+   <div class="vid_description" *ngIf="timer_display">
+     <ion-grid  no-padding no-margin  >
+       <ion-row no-padding no-margin class="ion-align-items-center color_vid_description">
+            <ion-col  text-center>
+                <!-- <p class="set">{{set}} <span class="mov_div">Mov.</span></p> -->
+                <p class="vid_title">{{video_title}}</p>
+           </ion-col >
+         </ion-row>
+     </ion-grid>
+   </div>
+
+
+
+ </div>
+
+ <div class="{{classOverlay}}" *ngIf="overlay1">
+  <!-- <app-applesong [status]='status'></app-applesong> -->
+
+   <div class="outer">
+     <div class="inner">
+       <ion-buttons class="overlay_cross_button" (click)="close_vid()"  slot="start" >
+        <ion-icon name="close-circle-outline" ></ion-icon>
+      </ion-buttons>
+     </div>
+      <div class="inner" style="width:80%;">&nbsp;</div>
+     <div class="inner right">
+        <ion-button *ngIf="hide_content" class="overlay_start_button" size="small" (click)="opneOverlay()"  color="tertiary"  slot="end">NEXT</ion-button>
+     </div>
+   </div>
+
+   <div class="outer">
+       <div class="inner">&nbsp;</div>
+       <div class="inner" style="width:100%; min-width: 10px !important;">
+          <!-- amrap Movements -->
+          <!-- <div *ngIf="amrap">
+            <div class="text">
+              <strong class="meheading">Movements</strong><br>
+              <div class="inner">&nbsp;</div>
+              <p style="font-size: medium;">These movements have avilable<br>
+              scalling options.Select any you'd like.</p>
+            </div>
+            <div class="select">
+
+                  <ion-select placeholder="Select One" class="sfirst">
+                     <ion-select-option *ngFor="let move of warmup_res_data" value="{{move.video_title}}">{{move.video_title}}</ion-select-option>
+                     <ion-select-option value="m">Pushups</ion-select-option>
+                  </ion-select>
+                  <ion-select placeholder="Select One" class="ssecond">
+                     <ion-select-option *ngFor="let move of warmup_res_data" value="{{move.video_title}}">{{move.video_title}}</ion-select-option>
+                  </ion-select>
+
+            </div>
+          </div> -->
+
+          <!-- emom EQIp movement-->
+          <!-- <div *ngIf="emom">
+            <div class="text">
+              <strong lass="meheading">Movements</strong><br>
+              <div class="inner">&nbsp;</div>
+              <p style="font-size: medium;">These movements have avilable<br>
+              scalling options.Select any you'd like.</p>
+            </div>
+            <div class="select">
+              <ion-select placeholder="Select One" class="sfirst" (ionChange)="selectEquip()">
+                 <ion-select-option *ngFor="let move of warmup_res_data" value="{{move.video_title}}">{{move.video_title}}</ion-select-option>
+              </ion-select>
+            </div>
+          </div> -->
+
+          <!-- EQIp  equipment-->
+          <!-- <div *ngIf="equipSelect">
+            <div class="text">
+              <div class="inner">&nbsp;</div>
+              <strong lass="meheading">Equipment</strong><br>
+              <div class="inner">&nbsp;</div>
+              <p style="font-size: medium;">Please enter your equipment choice</p>
+            </div>
+            <div class="select">
+              <ion-row *ngFor="let equip of equipImg">
+
+                <ion-col size="6" style="text-align: left;">
+                    <strong>{{equip.equipmentName}}</strong><br>
+                    <p style="text-align: left;">Provide weight</p>
+                </ion-col>
+                <ion-col size="3">
+                  <ion-input class="imptnmbr" ([ngModel])="authkey" (keyup.enter)="closeKeyboard(this)" type="text"></ion-input>
+                </ion-col>
+                <ion-col size="3">
+                  <ion-select placeholder="Unit" class="okbtn">
+                     <ion-select-option value="f">LBs</ion-select-option>
+                     <ion-select-option value="m">KGs</ion-select-option>
+                  </ion-select>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div> -->
+
+       </div>
+       <div class="inner">&nbsp;</div>
+  </div>
+
+
+
+
+
+
+ </div>
+
+<!-- final screen -->
+ <div [style.height.px]="scrHeight" class="overlay2" *ngIf="overlay2">
+ <!-- <app-applesong [status]='status'></app-applesong> -->
+	<!-- <h1 class="start_timer" *ngIf="display_innerTime">{{time}}</h1> -->
+
+	<!-- <ion-button *ngIf="display_innerTime"  class="overlay2_cancel_button" size="small"     (click)="confirmationBox()"  slot="start">Finish</ion-button> -->
+    <div class="arrow_Play" *ngIf="innertimer_display">
+      <div class="inner_text">
+      <div class="inner_Heading">
+        <!-- Your video will start in -->
+        Your video will start in <br> {{wait_videoTime}} Sec.!
+      </div>
+      <div class="inner_counter">
+         
+
+      
+      </div>
+      </div>
+    </div>
+	<div class="vid_description" >
+	    <ion-grid  no-padding no-margin  >
+			<ion-row no-padding no-margin class="ion-align-items-center color_vid_description"  style="" >
+			    <ion-col size="2" class="arrows" >
+            <div *ngIf="!disable_Back">
+			        <ion-icon *ngIf="index>0" name="ios-arrow-back" (click)="swipe_vid('previous')"></ion-icon>
+            </div>
+			    </ion-col >
+			    <ion-col size="8" text-center>
+			         <p class="set" style="font-size:unset !important;">
+                <span style="vertical-align: sub; padding-right: 9px; font-size: 20px;"> {{time}}</span> 
+                <ion-button *ngIf="display_innerTime" style=" --background: #00000000; border: 2px solid #fff; border-radius: 20px;font-size: 13px;"  class="" size="small"     (click)="confirmationBox()"  slot="start">Finish</ion-button>
+              </p>
+			         <p class="vid_title">({{set}}) {{video_title}}</p>
+			         <p (click)="swipe_vid('next')" class="vid_next_title">Next: {{set}}
+                <span *ngIf="Next_vid_title ==''">{{video_title}}</span> {{Next_vid_title}}</p>
+			    </ion-col >
+			    <ion-col size="2" class="arrows " >
+			       <ion-icon  name="ios-arrow-forward" (click)="swipe_vid('next')"></ion-icon>
+			    </ion-col >
+		    </ion-row>
+		</ion-grid>
+	</div>
+</div>
+
+<!-- video play -->
+<div>
+<!--<img  *ngIf="img_thumbnil" [style.height.px]="scrHeight" class="thumbnil_play_vid"  src="{{thumbnail}}">-->
+<img  *ngIf="img_thumbnil"  class="thumbnil_play_vid"  src="{{thumbnail}}">
+
+
+
+  <video *ngFor="let videoObj  of  warmup_res_data" [hidden]="!videoObj.isPlaying" id="{{videoObj.id}}" poster="{{videoObj.thumbnail}}" width="100%" height="100%" class="vid_play" loop="true" preload="none" controlsList="nodownload nofullscreen noremoteplayback" playsinline>
+		<source src="{{videoObj.video}}#t=0.2" type="video/mp4"/>
+	</video>
+
+  <!--<app-htmlvideo class="vid_play" [video_url]="video" [poster]="thumbnail" loop="true" autoplay="false"></app-htmlvideo>-->
+</div>
+
+
+<div [style.height.px]="scrHeight" class="{{classOverlay}}" *ngIf="overlay3">
+
+ <h1 class="start_timer2" style="color:white !important;" >Rest</h1>
+
+ <ion-button  class="overlay3_cancel_button" size="small"   (click)="confirmationBox()"  slot="start">Close</ion-button>
+<div class="timeUp">
+<div class="uptime">{{time}}</div>
+  <!-- {{time}} -->
+  <round-progress
+      [title]="time"
+      [current]="curr_loading"
+      [max]="total_loading"
+      [color]="'#45ccce'"
+      [background]="'#eaeaea'"
+      [radius]="100"
+      [stroke]="5"
+      [semicircle]="false"
+      [rounded]="true"
+      [clockwise]="true"
+      [responsive]="false"
+      [duration]="800"
+      [animation]="'easeOutBounce'"
+      [animationDelay]="0"
+      (onRender)="doSomethingWithCurrentValue($event)"> </round-progress>
+</div>
+
+ <div class="vid_description" >
+     <ion-grid  no-padding no-margin  >
+     <ion-row no-padding no-margin class="ion-align-items-center color_vid_description"  style="" >
+         <ion-col size="2" class="arrows">
+             <!-- <ion-icon *ngIf="index>0" name="ios-arrow-back" (click)="swipe_vid('previous')"></ion-icon> -->
+         </ion-col >
+         <ion-col size="8" text-center>
+              <p class="set">{{set}} <span class="mov_div">Mov.</span></p>
+              <p class="vid_title">{{video_title}}</p>
+              <p class="vid_next_title">Next: {{set}} {{Next_vid_title}}</p>
+         </ion-col >
+         <ion-col size="2" class="arrows " >
+            <!-- <ion-icon name="ios-arrow-forward" (click)="swipe_vid('next')"></ion-icon> -->
+         </ion-col >
+       </ion-row>
+   </ion-grid>
+ </div>
+</div>
+
+<footer *ngIf="overlay2" >
+	<ion-grid no-padding no-margin >
+		<ion-row no-padding no-margin >
+		    <ion-col no-padding *ngFor="let  count_video  of  total_footer  " >
+		      <div  class="footer_line" id="footer-indicator-{{count_video}}"  [ngClass]="{'first_line': count_video == 0 }"  >
+		        &nbsp;
+		      </div>
+		    </ion-col>
+	    </ion-row>
+
+      <!-- <ion-row no-padding no-margin >
+          <ion-col no-padding *ngFor="let  count_video  of  warmup_res_data  | keyvalue " >
+            <div  class="footer_line" id="footer-indicator-{{count_video.key}}"  [ngClass]="{'first_line': count_video.key == 0 }"  >
+              &nbsp;
+            </div>
+          </ion-col>
+        </ion-row> -->
+	</ion-grid>
+</footer>
+
+</ion-content>

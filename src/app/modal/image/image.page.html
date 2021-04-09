@@ -1,0 +1,245 @@
+<ion-header>
+
+  <ion-toolbar  color="primary" text-center>
+    <ion-title no-padding>
+     <h5 *ngIf="heading != 'Workout' && heading != 'Select_App' ">{{heading}}</h5>
+     <h5 *ngIf="heading == 'Select_App' ">Select Music</h5>
+    </ion-title>
+    <img *ngIf="heading=='Workout' && app!='Android' && app!='Deezer' && app!='Spotify'" (click)="selectApp(id)" src="../../assets/images/music_logo.ico" alt="" style="width:38px;">
+    <img *ngIf="app=='Spotify' && heading " (click)="selectApp(id)" src="../../assets/images/spotify1.png" alt="" style="width:38px;border-radius:25px;">
+    <img *ngIf="app=='Android' && heading " (click)="selectApp(id)" src="../../assets/images/AndroidMusic.png" alt="" style="width:38px;border-radius:25px;">
+    <img *ngIf="app=='Deezer' " (click)="selectApp(id)" src="../../assets/images/deezeer.jpg" alt="" style="width:38px;">
+
+    <!-- <ion-icon name="musical-notes"></ion-icon> -->
+    	<ion-button *ngIf="heading=='Workout' && type=='free'" class="model_start_button" (click)="openVideo(heading,id,category,equipImg,sets)"    color="tertiary" slot="end">START</ion-button>
+    	<ion-button  *ngIf="heading=='Workout' && type=='paid' && userInfo?.isFeatureEnabled==0"  (click)="redirectToPlan()" class="model_start_button" color="tertiary" slot="end">START PLAN</ion-button>
+    	<ion-button *ngIf="heading=='Workout' && type=='paid' && userInfo?.isFeatureEnabled==1"  (click)="openVideo(heading,id,category,equipImg,sets)" class="model_start_button" color="tertiary" slot="end">START</ion-button>
+      <ion-button *ngIf="heading=='Music'"  (click)="openPlayer()" class="model_start_button" color="tertiary" slot="end">SELECT</ion-button>
+      <ion-buttons  (click)="closeModal()" slot="start" ><ion-icon style="font-size: 150%;" name="arrow-back"></ion-icon></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!--Start :: show when user click ask acoach btm -->
+<ion-content *ngIf="ask_a_coach">
+  <ion-card no-margin class="coach_container" style='background-image: url("../assets/images/warmup_cover.jpg");background-repeat: no-repeat;background-size: cover;'>
+      <ion-card class="coach_inner_container">
+          <form  [formGroup]="coachForm" class="list-form">
+              <ion-card-content class="coach_textbox">
+                  <ion-label position="floating">Message</ion-label>
+            		  <ion-textarea formControlName="message" name="message" value="" placeholder=""></ion-textarea>
+              </ion-card-content>
+                     <p text-center class="text08" *ngIf="coachForm.get('message').touched && coachForm.get('message').hasError('required')">
+                          <ion-text  color="danger">
+                            This field is required
+                          </ion-text>
+                      </p>
+              <ion-item  *ngIf="checkUser" >
+                  <ion-button  class="join"  type="submit" (click)="sendCoach(heading,id,user_id)" [disabled]="!coachForm.valid"  slot="end"><span>send</span> </ion-button>
+              </ion-item>
+        </form>
+        <ion-item *ngIf="!checkUser">
+          <ion-button class="join" (click)="alertMessage()" slot="end"><span>send</span> </ion-button>
+        </ion-item>
+    </ion-card>
+  </ion-card>
+</ion-content>
+<!--End :: show when user click ask acoach btm -->
+
+<ion-content *ngIf="heading=='Select_App' ">
+  <ion-list lines="full">
+    <ion-item (click)="openAndroidMusic()" style="margin-top: 8px;">
+        <ion-avatar slot="start">
+        <img src="../../assets/images/AndroidMusic.png" alt="" style="width:38px;">
+        </ion-avatar>
+        <ion-label>Android Music</ion-label>
+        <ion-icon slot="end" name="arrow-dropright"></ion-icon>
+      </ion-item>
+    <ion-item (click)="openSpotify(id)">
+      <ion-avatar slot="start">
+        <img src="../../assets/images/spotify1.png" alt="" style="width:38px;">
+      </ion-avatar>
+      <ion-label>Opent Spotify</ion-label>
+      <ion-icon slot="end" name="arrow-dropright"></ion-icon>
+    </ion-item>
+
+<!--   <ion-item (click)="openDeezer()" style="margin-top: 8px;">
+    <ion-avatar slot="start">
+    <img src="../../assets/images/deezeer.jpg" alt="" style="width:38px;">
+    </ion-avatar>
+    <ion-label>Open Deezer</ion-label>
+    <ion-icon slot="end" name="arrow-dropright"></ion-icon>
+  </ion-item> -->
+</ion-list>
+</ion-content>
+
+<ion-content *ngIf="heading=='Albums' ">
+  <ion-item *ngFor="let data of newData" (click)="openSpotifyTrack(data,'id')">
+    <!-- openPlayer -->
+  <ion-thumbnail slot="start">
+    <img src="{{ data.images[0].url}}">
+  </ion-thumbnail>
+  <ion-label>
+    <h3>{{ data.name }}</h3>
+    <p>By:{{ data.owner.display_name }}</p>
+    <p>{{ data.tracks.total }} Tracks</p>
+  </ion-label>
+  <ion-icon slot="end" name="arrow-dropright"></ion-icon>
+</ion-item>
+</ion-content>
+
+<ion-content *ngIf="heading=='Android Music' ">
+  <div *ngFor="let data of newData">
+    <ion-item style="margin-top: 4px;" (click)="openAndroidPlayer(data)">
+      <ion-label>
+        <h3>{{ data.folder }}</h3>
+      </ion-label>
+      <!-- <ion-icon slot="end" name="arrow-dropright"></ion-icon> -->
+    </ion-item>
+  </div>
+  <ion-item style="margin-top: 4px;"  (click)="openAndroidPlayer('','id')">
+    <ion-label>
+      <h3>Select all songs from device</h3>
+    </ion-label>
+    <!-- <ion-icon slot="end" name="arrow-dropright"></ion-icon> -->
+  </ion-item>
+</ion-content>
+
+<ion-content *ngIf="heading=='Albumsfgdf' ">
+  <h3 style="padding: 10px; background: #9cb8bb;">Select An Album</h3>
+  <div >
+    <ion-item (click)="selectAlbum(data)">
+      <ion-thumbnail slot="start">
+        <img src="{{ data.image}}">
+      </ion-thumbnail>
+      <ion-label>
+        <h3>{{ data.name }}</h3>
+        <p>{{ data.total_tracks }} Tracks</p>
+      </ion-label>
+      <ion-icon slot="end" name="arrow-dropright"></ion-icon>
+    </ion-item>
+  </div>
+</ion-content>
+
+<ion-content *ngIf="heading=='Apple Music' ">
+  <ion-item *ngFor="let data of newData" (click)="OpenAppleTrack(data.id)" >
+  <ion-thumbnail slot="start">
+    <img src="../../assets/images/apple_music.png">
+  </ion-thumbnail>
+  <ion-label>
+    <h3>{{ data.name }}</h3>
+  </ion-label>
+  <ion-icon slot="end" name="arrow-dropright" ></ion-icon>
+</ion-item>
+</ion-content>
+
+
+<ion-content *ngIf="heading=='Music' ">
+  <ion-item *ngFor="let data of newData" >
+  <ion-thumbnail slot="start">
+    <img src="../../assets/images/apple_music.png">
+  </ion-thumbnail>
+  <ion-label>
+    <h3>{{ data.name }} </h3>
+    <p>By: {{data.artist}}</p>
+    <p>Album: {{data.album}}</p>
+  </ion-label>
+  <ion-icon slot="end" name="arrow-dropright"></ion-icon>
+</ion-item>
+</ion-content>
+
+
+<ion-content *ngIf="heading=='player_spotify' ">
+    <iframe id="myiframe"  [src]="'https://open.spotify.com/embed?uri='+newData.items[0].track.album.uri | safepipe " width="100%" height="100%" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+</ion-content>
+
+
+
+<ion-content *ngIf="!ask_a_coach && heading !='Select_App' && heading !='Albums' &&heading != 'Player' && heading != 'player_spotify' && heading != 'Apple Music' && heading != 'Music' && heading !='Android Music' ">
+  <ion-grid no-margin no-padding>
+    <ion-row no-margin no-padding>
+      <ion-col size="12" no-margin no-padding>
+      <!-- <ion-col  *ngIf="heading=='Workout'"  size="12" no-margin no-padding> -->
+
+        <div class="imageContainer">
+          <img *ngIf="heading=='Workout'" style="width: 100%;min-height:80px;" src="{{hor_image}}">
+          <img *ngIf="heading!='Workout'" style="width: 100%;min-height:80px;" (click)="openFullVideo(id)" src="{{image}}">
+
+          <div *ngIf="heading!='Workout'" class="playBtnOverImage">
+             <ion-icon name="play" (click)="openFullVideo(id)" ></ion-icon>
+          </div>
+          <div class="warmupTitle">
+            {{name}}
+          </div>
+
+        </div>
+
+      </ion-col>
+
+
+
+      <ion-col no-margin no-padding>
+        <ion-list>
+          <!--<ion-item-divider class="text_heading ion-margin-bottom"*ngIf="name" style="margin-bottom: 2px;" >
+             <ion-button (click)="openAskMessage(heading,id)"  class="btn_text ion-margin-end" slot="end" ><span style="margin-top: 4%;">Ask Coach</span> </ion-button>
+         </ion-item-divider>-->
+         <ion-item-divider  class="text_heading no-padding-top" *ngIf="category"  class="no-bottom-border">
+          <strong *ngIf="category=='for_time'">FOR TIME</strong>
+          <strong *ngIf="category=='emom'">EMOM</strong>
+          <strong *ngIf="category=='amrap'">AMRAP</strong>
+        </ion-item-divider>
+        <ion-card-content  *ngIf="category && category!= 'for_time'" style="padding-left:10px;padding-right:10px;" class="  ion-padding-vertical">
+           <ion-col *ngFor="let data of vid_Title" style="padding: unset;">
+             <span>{{data.video_title}}</span>,
+           </ion-col>
+         </ion-card-content>
+         <ion-card-content  *ngIf="category && category=='for_time'" style="padding-left:10px;padding-right:10px;" class="  ion-padding-vertical">
+          
+             <span>{{short_description}}</span>
+         </ion-card-content>
+
+         <ion-item-divider  class="text_heading no-padding-top" *ngIf="overview"  class="no-bottom-border">
+           <strong style="text-transform: uppercase;">Instructions</strong>
+         </ion-item-divider>
+         <ion-card-content [innerHTML]="overview" *ngIf="overview" style="padding-left:10px;padding-right:10px;" class="  ion-padding-vertical"></ion-card-content>
+
+       <!--<ion-item-divider  class="text_heading no-padding-top" *ngIf="overview"  class="no-bottom-border">
+         <strong>Bootstrap Squats</strong>
+       </ion-item-divider>
+       <ion-card-content *ngIf="overview" class="  ion-padding-vertical " style="padding-top: 1px;">
+         <p>a. Sit in the bottom squat</p>
+         <p>b. Hands grabbing outside of feet with arms on inside of knees</p>
+         <p>c. Chest stays tall</p>
+         <p>d. Core is engaged</p>
+         <p>e. Press through heels and send hips into the air</p>
+         <p>f. Settle in your end range of motion for 2 breaths before returning to squat</p>
+       </ion-card-content>-->
+
+       <ion-item-divider *ngIf="instructions" class="no-bottom-border">
+         <strong style="text-transform: uppercase;">Description</strong>
+       </ion-item-divider>
+       <ion-card-content [innerHTML]="instructions" style="padding-top: 1px; padding-left: 9px;" class="  ion-padding-vertical"></ion-card-content>
+
+       <ion-item-divider  *ngIf="tips" class="no-bottom-border">
+         <strong style="text-transform: uppercase;">Tips</strong>
+       </ion-item-divider>
+       <ion-card-content  [innerHTML]="tips"  style="padding-top: 1px;" *ngIf="tips" class="  ion-padding-vertical">
+
+       </ion-card-content>
+       <ion-item-divider  *ngIf="equipImg" class="no-bottom-border">
+         <strong style="text-transform: uppercase;">Equipment</strong>
+       </ion-item-divider>
+       <ion-card-content *ngIf="equipImg"  style="padding-top: 1px;" class="  ion-padding-vertical">
+         <ion-row>
+           <ion-col *ngFor="let data of equipImg" style="width:66px; ion-coltext-align:center;" size="4">
+             <p> <img src="{{data.equipmentImg}}" alt="" style="width:54px; height:54px"> </p>
+             <p>{{data.equipmentName}}</p>
+           </ion-col>
+         </ion-row>
+
+      </ion-card-content>
+     </ion-list>
+
+ </ion-col>
+  </ion-row>
+</ion-grid>
+</ion-content>

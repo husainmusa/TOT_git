@@ -1,0 +1,10 @@
+<ion-header>
+  <ion-toolbar  color="primary" text-center>
+    <ion-title>spotifytrack</ion-title>
+          <ion-buttons  (click)="closeModal()" slot="start" ><ion-icon style="font-size: 150%;" name="arrow-back"></ion-icon></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<iframe  [src]="newUrl " width="100%" height="100%" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+</ion-content>

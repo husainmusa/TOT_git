@@ -1,0 +1,92 @@
+.rewind{
+  color: white;
+  // position: absolute;
+  //   top: 11%;
+  // left: 12.1%;
+  // right: 30%;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0 0 10px #999;
+  --background: white;
+  z-index: 10;
+  margin-top: 10px;
+  /* margin-left: 10px; */
+float: right;
+}
+// .play{
+// color: white;
+// position: absolute;
+// top: 6%;
+// left: 48%;
+// right: 30%;
+// font-size: xx-large;
+// }
+ion-button.play_pause_btn {
+      // position: absolute;
+      // left: 37.2%;
+      // top: 9.2%;
+  width: 65px !important;
+  height: 65px !important;
+  // font-size: 2.3em !important;
+  --border-radius: 50%;
+  --box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  --transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), background-color 15ms linear, color 15ms linear;
+   z-index: 10;
+}
+.fastforward{
+color: white;
+// position: absolute;
+//     top: 11%;
+// left: 67%;
+// right: 30%;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+box-shadow: 0 0 10px #999;
+--background:white;
+ z-index: 10;
+ margin-top: 10px;
+ /* margin-left: 10px; */
+ float: left;
+}
+.infinite{
+color: white;
+// position: absolute;
+// top: 12%;
+// left: 86%;
+// right: 30%;
+font-size: xx-large;
+ z-index: 10;
+ margin-top: 10px;
+}
+.thumb{
+  // position: absolute;
+  //   top: 11%;
+  // left: 5%;
+  width: 61px;
+  height: auto;
+   z-index: 10;
+}
+.icon-inner, svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+  color: black !important;
+   z-index: 10;
+}
+
+iframe{
+    // position: absolute;
+    // top: 5%;
+    // left: 2%;
+    width: 95%;
+    z-index: 100;
+    height: 12%;
+}
+ion-col{
+//  box-shadow: #383936 0px 0px 0px 6px;
+  text-align:center;
+  z-index:11;
+  // background: #383936;
+}

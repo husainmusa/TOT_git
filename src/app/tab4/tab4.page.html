@@ -1,0 +1,101 @@
+<ion-header >
+    <ion-toolbar>
+		 <ion-title text-center><h5>Profile</h5></ion-title>
+	     <ion-buttons (click)="notifications()" slot="end">
+	     	<ion-icon   *ngIf="checkUser && !checkGuestUser" style="font-size: 150%;" name="more"></ion-icon>
+	    </ion-buttons>
+	</ion-toolbar>
+</ion-header>
+<ion-content>
+	<ion-grid  no-padding>
+	  <ion-row text-center>
+	    <ion-col *ngIf="checkUser">
+	    	  <ion-list>
+
+          <ion-item-divider color="light">
+        	  <ion-label >USER PROFILE</ion-label>
+          </ion-item-divider>
+
+          <ion-item class="edit_list">
+        	  <ion-label >Name</ion-label>
+        	  <ion-input  type="text"  placeholder="{{userdetails?.name}}"   readonly></ion-input>
+          </ion-item>
+
+          <ion-item class="edit_list">
+        	  <ion-label floating primary>E-Mail</ion-label>
+        	  <ion-input placeholder="{{userdetails?.email}}" readonly></ion-input>
+          </ion-item>
+          <ion-item  class="edit_list">
+        	  <ion-label floating primary>Age</ion-label>
+        	  <ion-input  placeholder="{{userdetails?.age}}" readonly></ion-input>
+          </ion-item>
+          <ion-item class="edit_list">
+        	  <ion-label floating primary>Height</ion-label>
+        	  <ion-input  placeholder="{{userdetails?.height_lbl}}" readonly></ion-input>
+          </ion-item>
+
+          <ion-item  class="edit_list">
+        	  <ion-label floating primary>Weight</ion-label>
+        	  <ion-input  placeholder="{{userdetails?.body_weight}}  {{userdetails?.weight_unit}}" readonly></ion-input>
+          </ion-item>
+
+          <ion-item class="edit_list">
+        	  <ion-label floating primary>Target Weight</ion-label>
+        	  <ion-input   placeholder="{{userdetails?.targeted_weight}} {{userdetails?.target_weight_unit}} "  readonly></ion-input>
+          </ion-item>
+          <ion-item  class="edit_list">
+        	  <ion-label floating primary>Gender</ion-label>
+        	  <ion-input  placeholder="{{userdetails?.gender}}" readonly></ion-input>
+          </ion-item>
+          <ion-item class="edit_list">
+        	  <ion-label floating primary>Level</ion-label>
+        	  <ion-input  placeholder="{{userdetails?.fitness_level}}" readonly></ion-input>
+          </ion-item>
+
+          <ion-item class="edit_list">
+        	  <ion-label  floating primary>Interested In</ion-label>
+        	  <ion-input  placeholder="{{userdetails?.interested_in}}" readonly></ion-input>
+          </ion-item>
+
+         <div *ngIf="subscribedata">
+        	  <ion-item-divider color="light">
+        		  <ion-label>Active plan</ion-label>
+        	  </ion-item-divider>
+        	   <ion-item class="edit_list" >
+        		  <ion-label style="">Subscribed</ion-label>
+        		  <ion-input placeholder="{{subscribedata?.title}}"   readonly></ion-input>
+        	  </ion-item>
+        	  <!-- <ion-item class="edit_list">
+        		  <ion-label style="">Validity</ion-label>
+        		  <ion-input  placeholder="{{subscribedata?.plan_validity}} days"   readonly></ion-input>
+        	  </ion-item>-->
+            <ion-item class="edit_list" >
+        		  <ion-label style="">Expiration date</ion-label>
+        		  <ion-input placeholder="{{subscribedata?.end_plan}}" readonly></ion-input>
+        	  </ion-item>
+            <ion-button style="margin-left:3%;margin-right:3%;" color="primary" expand="full" (click)="unSubscribeConfirm(subscribedata.id)">Unsubscribe Plan</ion-button>
+
+          </div>
+	  </ion-list>
+	 </ion-col>
+
+	    <ion-col *ngIf="!checkUser && apiResult">
+		    <ion-card class="card tech_card">
+		    	  <ion-card-header>
+				    <ion-card-title class="text_heading" text-center>Fitness | Account Sign In</ion-card-title>
+				  </ion-card-header>
+
+				  <ion-card-content text-center>
+				    <ion-label class="text_desc">Please login your Fitness App account below or create an account for the instance access to all fitness app content</ion-label>
+				  </ion-card-content>
+
+				  <ion-card-content text-center>
+				    <ion-button  class="btn_text"  (click)="backToLogin()">Sign In</ion-button>
+				    <ion-button  class="btn_text"  (click)="backToRegister()">Sign Up</ion-button>
+				  </ion-card-content>
+		    </ion-card>
+	    </ion-col>
+
+	  </ion-row>
+	</ion-grid>
+</ion-content>

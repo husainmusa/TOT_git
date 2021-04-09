@@ -1,0 +1,17 @@
+<ion-content>
+    <span *ngIf="currentIndex==0"  class="slider_common_heading">By continuing you accept the terms of services<span (click)="term_and_service()" class="know_more"> Read More</span> </span>
+      <ion-slides #splashSlider pager="true" [options]="slideOpts" (ionSlideWillChange)="onChangeSlider()">
+        <ion-slide  *ngFor="let splash of splashScreenArray; index as i">
+            <span *ngIf="splash.show_detail" class="slider_heading">{{splash.heading}}</span>
+            <span *ngIf="splash.show_detail" class="slider_sub_heading">{{splash.sub_heading}}</span>
+            <img *ngIf="splash.upload_type=='image'"  src="{{splash.url}}" onerror="this.onerror=null;this.src='assets/img/front.jpg';" >
+
+            <video *ngIf="splash.upload_type=='video'" id="html-video-cmp-{{i}}" loop="true" poster="../assets/images/warmup_cover_1.jpg" width="100%" height="100%" class="vid_play"  preload="auto" controlsList="nodownload nofullscreen noremoteplayback" playsinline>
+              <source src="{{splash.url}}#t=1" type="video/mp4"/>
+            </video>
+          <!--  <app-htmlvideo  *ngIf="splash.upload_type=='video'" [elementID]="{{i}}" [video_url]="splash.url" poster="../assets/images/vid_bg.jpg"></app-htmlvideo>-->
+        </ion-slide>
+
+      </ion-slides>
+<ion-button  class="slider_btn bg_color" (click)="continue()"  expand="full" no-margin  clear>CONTINUE</ion-button>
+</ion-content>

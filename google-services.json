@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "664958558516",
+    "firebase_url": "https://fitapp-ff760.firebaseio.com",
+    "project_id": "fitapp-ff760",
+    "storage_bucket": "fitapp-ff760.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664958558516:android:1420aa1e320a0f3bf08561",
+        "android_client_info": {
+          "package_name": "com.fitness.ttf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "664958558516-5u46kul8kjkfn852tkairv329btk3ctg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuKg2zv-JSrobRiO2bdU1LG3d6uUUsdRA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "664958558516-5u46kul8kjkfn852tkairv329btk3ctg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

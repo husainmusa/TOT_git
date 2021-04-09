@@ -1,0 +1,30 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    
+    <ion-tab-button (click)="ngClicktab()" tab="tab1" class="tab_bg" >
+      <ion-icon name="ios-walk"></ion-icon>
+      <ion-label>About us</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="ngClicktab()" tab="tab2" class="tab_bg">
+      <ion-icon name="ios-flash"></ion-icon>
+      <ion-label>Workouts</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="ngClicktab()" tab="tab3" class="tab_bg">
+     <ion-icon name="ios-fitness"></ion-icon>
+      <ion-label>Technique</ion-label>
+    </ion-tab-button>
+   
+    <ion-tab-button (click)="ngClicktab()" tab="tab4" class="tab_bg">
+      <ion-icon name="ios-contact"></ion-icon>
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="ngClicktab()" tab="tab5" class="tab_bg">
+      <!-- <ion-badge *ngIf="countMessage != ''"  color="danger">{{countMessage}}</ion-badge> -->
+      <ion-icon name="mail"></ion-icon>
+      <ion-label >Coach</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

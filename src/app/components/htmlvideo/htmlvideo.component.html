@@ -1,0 +1,28 @@
+<div *ngIf="!warmup_res_data">
+<video loop="{{loop}}" autoplay="{{autoplay}}"  poster="{{poster}}"  width="100%" height="100%" class="vid_play"  preload="metadata" controlsList="nodownload nofullscreen noremoteplayback" playsinline>
+  <source src="{{video_url}}#t=1" type="video/mp4"/>
+</video>
+</div>
+<div *ngIf="warmup_res_data" style="height:100%;">
+  	<h1 class="start_timer" *ngIf="showTime" >{{time}}</h1>
+  <div size="8" text-center class="title_div">
+    <p class="set">{{set}} <span class="mov_div">Mov.</span></p>
+       <p class="vid_title">{{video_title}}</p>
+       <p (click)="swipe_vid('next')" class="vid_next_title">Next : {{Next_vid_title}}</p>
+  </div >
+  <div *ngIf="visible_btn" class="previous" (click)="swipe_vid('previous')">
+      <img class="image_arrow" src="assets/img/arrow-back.png" alt="">
+
+  </div>
+  <div *ngIf="visible_btn" class="next" (click)="swipe_vid('next')">
+      <img class="image_arrow" src="assets/img/arrow-right.png" alt="">
+  </div>
+
+<video *ngFor="let videoObj  of  warmup_res_data" [hidden]="!videoObj.isPlaying" id="{{videoObj.id}}" width="100%" height="100%" class="vid_play" loop="true"  poster="{{poster}}" preload="auto" controlsList="nodownload nofullscreen noremoteplayback" playsinline>
+  <source src="{{videoObj.video}}#t=0.2" type="video/mp4"/>
+</video>
+</div>
+
+<!-- poster="{{poster}}" -->
+<!-- {{videoObj.video}} -->
+<!-- https://thumbs.gfycat.com/ElegantUnsteadyHornet-max-1mb.gif -->

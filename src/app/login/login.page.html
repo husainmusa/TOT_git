@@ -1,0 +1,291 @@
+<ion-content class="login Aligner-item--top">
+  <!-- user -->
+  <div *ngIf="user_login">
+    <!-- Logo -->
+    <div class="skip">
+     <ion-text *ngIf="skip" color="primary" (click)="user_info()" class="fw700">
+         Skip
+     </ion-text>
+    <ion-text *ngIf="!skip" color="primary" (click)="backToHome()" class="fw700">
+         Go To Home
+     </ion-text>
+      <!-- <ion-button size="small" color="primary" shape="round" fill="outline">Skip</ion-button> -->
+    </div>
+    <div  text-center class="app_title">
+      <h4 no-margin>
+        <ion-text color="dark" class="fw700">
+         {{pageTitle}}
+        </ion-text>
+      </h4>
+    </div>
+
+    <div  *ngIf="show_dialog" >
+      <form  [formGroup]="onLoginForm" class="list-form">
+      <div padding>
+            <ion-item margin-bottom>
+              <ion-input formControlName="email" name="email" type="email" placeholder="E-mail" required></ion-input>
+            </ion-item>
+
+            <p ion-text class="text08" *ngIf="onLoginForm.get('email').touched && onLoginForm.get('email').hasError('required')">
+              <ion-text color="danger">
+                This field is required
+              </ion-text>
+            </p>
+            <p ion-text class="text08" *ngIf="onLoginForm.get('email').touched && onLoginForm.get('email').hasError('pattern')">
+              <ion-text color="danger">
+                Invalid Email Id.
+              </ion-text>
+            </p>
+
+            <ion-item>
+              <ion-input formControlName="password" name="password" type="password" placeholder="Password"   required></ion-input>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="onLoginForm.get('password').touched && onLoginForm.get('password').hasError('required')">
+              <ion-text color="danger">
+                This field is required
+              </ion-text>
+            </p>
+
+      </div>
+       <ion-grid class="btn-group" no-margin no-padding>
+          <ion-row no-margin no-padding>
+
+            <ion-col no-margin no-padding>
+                <ion-button padding icon-left size="medium"   expand="full"  color="primary"  type="submit" (click)="signIn()"  tappable>
+                LOGIN
+                </ion-button>
+            </ion-col>
+          <!--<ion-col  no-margin no-padding>
+             <ion-button padding icon-left size="medium"  expand="full" color="primary"   (click)="reset()"  tappable>
+               CLEAR
+              </ion-button>
+            </ion-col>-->
+
+          </ion-row>
+        </ion-grid>
+
+
+     </form>
+      <p padding tappable class="paz" style="font-size: 13px;">
+        <ion-grid no-margin no-padding>
+          <ion-row no-margin no-padding>
+            <ion-col (click)="forgotPass()">
+              <strong>Forgot Password?</strong>
+            </ion-col>
+            <ion-col (click)="goToRegister()"  class="ion-text-end">
+               <strong>Create Account?</strong>
+            </ion-col >
+          </ion-row>
+        </ion-grid>
+      </p>
+
+    <!-- Other links -->
+      <div text-center margin-top>
+        <p text-center>
+          <ion-text color="dark">
+           <strong>Or</strong>
+          </ion-text>
+        </p>
+        <ion-grid class="btn-group">
+          <ion-row>
+
+            <ion-col size="12"><ion-button  expand="full" color="danger" (click)="doGoogleLogin()">
+                <ion-icon slot="icon-only" name="logo-google" ></ion-icon>LOGIN WITH GOOGLE
+              </ion-button></ion-col>
+            <ion-col size="12">
+              <ion-button  expand="full" color="secondary" (click)="facebookLogin();" >
+                <ion-icon slot="icon-only" name="logo-facebook" ></ion-icon>LOGIN WITH FACEBOOK
+              </ion-button>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+
+    <!-- <div > -->
+  <ion-grid *ngIf="show_verify" >
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12">
+        <form [formGroup]="onVerify" class="list-form">
+        <div  padding-top padding-start padding-end>
+              <ion-item>
+                <ion-input  name="otp" type="text" placeholder="OTP" formControlName="otp" required></ion-input>
+              </ion-item>
+              <p padding-top padding-start padding-end  no-margin ion-text class="text08" *ngIf="onVerify.get('otp').touched && onVerify.get('otp').hasError('required')">
+              <ion-text color="danger">
+                This field is required
+              </ion-text>
+              </p>
+        </div>
+        <ion-button padding no-margin icon-left size="medium" expand="full" shape="round" color="primary"  type="submit" (click)="Verify()" tappable>
+          <ion-icon name="log-in"></ion-icon>
+              Verify OTP
+        </ion-button>
+      </form>
+      <p padding text-right tappable (click)="goBackLogin()" class="paz">
+          <ion-text color="dark">
+            <strong>Back To Login?</strong>
+          </ion-text>
+      </p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+    <div  *ngIf="show_reset" >
+      <form  [formGroup]="onResetForm" class="list-form">
+      <div padding>
+            <ion-item margin-bottom>
+              <ion-input formControlName="password" name="password" type="password" placeholder="New Password"   required></ion-input>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="onResetForm.get('password').touched && onResetForm.get('password').hasError('required')">
+              <ion-text color="danger">
+                This field is required
+              </ion-text>
+            </p>
+            <ion-item>
+              <ion-input formControlName="password_confirmation"   name="password" type="password" placeholder="Retype-Password"  required></ion-input>
+            </ion-item>
+            <p ion-text  class="text08" *ngIf="onResetForm.get('password_confirmation').touched && onResetForm.get('password_confirmation').hasError('required')">
+              <ion-text color="danger">
+                 This field is required
+              </ion-text>
+            </p>
+            <p ion-text  class="text08" *ngIf="onResetForm.get('password_confirmation').touched && onResetForm.get('password_confirmation').hasError('MatchPassword')">
+              <ion-text color="danger">
+              password does not match
+              </ion-text>
+            </p>
+
+      </div>
+      <ion-button padding icon-left size="medium" expand="full" color="primary"  type="submit" (click)="resetPassword()"  tappable>
+        <ion-icon name="log-in" ></ion-icon>
+       Reset password
+      </ion-button>
+     </form>
+     <p padding text-right tappable (click)="goBackLogin()" class="paz">
+        <ion-text color="dark">
+          <strong>Back To Login?</strong>
+        </ion-text>
+    </p>
+    </div>
+    </div>
+
+    <!-- Guest user -->
+    <div *ngIf="guest_user">
+    <!-- <div> -->
+
+      <div  text-center class="app_title">
+
+         <ion-grid no-margin no-padding>
+          <ion-row>
+
+            <ion-col size="2" >
+              <ion-text ><ion-icon style="font-size: 150%;" (click)="guest_back_to_login()"  color="primary" name="arrow-dropleft-circle"></ion-icon></ion-text>
+            </ion-col>
+            <ion-col size="8" >
+               <ion-text  class="ion-text-center"><strong>User Info</strong></ion-text>
+            </ion-col>
+             <ion-col size="12" text-center>
+               Tell us about your self so we may tailor your workout.
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+     <!--  <span no-margin>
+        <ion-text color="dark" class="fw700">
+
+         <br><br>
+        </ion-text>
+      </span>
+      <span no-margin>
+        <ion-text color="dark" class="fw700">
+
+        </ion-text>
+      </span> -->
+    </div>
+
+    <div>
+      <form  [formGroup]="guestForm" class="list-form">
+      <div padding>
+
+            <ion-item margin-bottom>
+              <ion-input formControlName="age" name="age" type="tel"  (keypress)="setmaxlen($event,2)" placeholder="Age" required></ion-input>
+
+            </ion-item>
+            <p ion-text class="text08" *ngIf="guestForm.get('age').touched && guestForm.get('age').hasError('required')">
+              <ion-text color="danger">
+                <small>Age is required and should be between 10 - 100</small>
+              </ion-text>
+            </p>
+
+            <ion-item margin-bottom>
+              <ion-input formControlName="body_weight" type="tel" name="body_weight"  placeholder="Weight"  required></ion-input>
+              <ion-select id="guest_weight_unit" slot="end" formControlName="weight_unit"  name="weight_unit"  placeholder="Unit"  required>
+                  <ion-select-option value="KG" selected>KG</ion-select-option>
+                  <ion-select-option value="LBS">LBS</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="guestForm.get('body_weight').touched && guestForm.get('body_weight').hasError('required')">
+              <ion-text color="danger">
+                <small> This field is required (minimum weight 25)</small>
+              </ion-text>
+            </p>
+
+            <ion-item  margin-bottom>
+              <ion-label class="lebel_guest" floating primary >Gender</ion-label>
+              <ion-select  formControlName="gender" placeholder="Select One"  required>
+                  <ion-select-option value="female">Female</ion-select-option>
+                  <ion-select-option value="male">Male</ion-select-option>
+                </ion-select>
+            </ion-item>
+             <p ion-text class="text08" *ngIf="guestForm.get('gender').touched && guestForm.get('gender').hasError('required')">
+              <ion-text color="danger">
+                This field is required
+              </ion-text>
+            </p>
+
+            <ion-item>
+              <ion-label class="lebel_guest" floating primary>Level</ion-label>
+              <ion-select formControlName="fitness_level" placeholder="Select" required>
+                  <ion-select-option value="beginner" >Beginner</ion-select-option>
+                  <ion-select-option value="experienced">Experienced</ion-select-option>
+                  <ion-select-option value="athletes">Athletes</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="guestForm.get('fitness_level').touched && guestForm.get('fitness_level').hasError('required')">
+              <ion-text color="danger">
+                This field is required
+              </ion-text>
+            </p>
+
+
+
+
+      </div>
+       <ion-grid class="btn-group" no-margin no-padding>
+          <ion-row no-margin no-padding>
+
+            <ion-col no-margin no-padding>
+                <ion-button padding icon-left size="medium"   expand="full"  color="primary"  type="submit" (click)="guestSubmit()" tappable>
+                SUBMIT
+                </ion-button>
+            </ion-col>
+            <ion-col  no-margin no-padding>
+             <ion-button padding icon-left size="medium"  expand="full" color="primary" (click)="guest_back_to_login()"  tappable>
+               CANCEL
+              </ion-button>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+
+
+     </form>
+
+
+
+    </div>
+
+    </div>
+</ion-content>

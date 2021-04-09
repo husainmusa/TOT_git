@@ -1,0 +1,1295 @@
+import { Component, OnInit,HostListener,NgZone ,ViewChild,ElementRef,Inject} from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { RestapiProvider } from  '../providers/restapis/restapis';
+import { Platform, LoadingController, ToastController ,AlertController} from '@ionic/angular';
+import { MediaObject, Media } from '@ionic-native/media/ngx';
+import { DOCUMENT} from '@angular/common';
+import { DatePipe } from '@angular/common';
+
+import {
+  FileTransfer,
+  FileTransferObject
+} from '@ionic-native/file-transfer/ngx';
+import { File } from '@ionic-native/file/ngx';
+
+@Component({ 
+  selector: 'app-play-video',
+  templateUrl: './play-video.page.html',
+  styleUrls: ['./play-video.page.scss'],
+})
+export class PlayVideoPage implements OnInit {
+    scrHeight:any;
+    response_data:any;
+    hide_content:boolean=true;
+    img_thumbnil:boolean=true;
+
+    timer_display:boolean=false;
+    overlay:boolean=true;
+    overlay2:boolean=false;
+
+    warmup_res_data:any;
+    video_first:any;
+
+    id:any;
+    type:any;
+    counter:any=10;
+
+    set:any='';
+    video:any='';
+    thumbnail:any='../assets/images/vid_bg.jpg';
+    video_title:any='';
+    Next_vid_title:any='Finished';
+    Next:any=0;
+    // previous:any=0;
+    index:any=0;
+    count_vid_list_length:any=0;
+
+    showWarning:any=0;
+    showSpecialNote:any=1;
+    specialNote:any='';
+    warningNote:any='';
+
+    timestamp_min:any=0;
+    timestamp_sec:any=0;
+    currentVideoEle:any;
+
+    tracks:any;
+    title: any;
+    artist: any;
+    image: string = 'assets/album_art.jpg';
+    filename: any = 'Baba O`reily';
+    duration: any = -1;
+    curr_playing_file: MediaObject;
+    message: any;
+    storageDirectory: any;
+    play_The_track: string = "/android_asset/public/assets/audio/beep_2.mp3"; //note this specific url format is used in android only
+    position: any = 0;
+    get_position_interval: any;
+    is_playing = false;
+    is_in_play = false;
+    is_ready = false;
+    get_duration_interval: any;
+    display_position: any = '00:00';
+    display_duration: any = '00:00';
+
+
+  public timeBegan = null
+  public timeStopped:any = null
+  public stoppedDuration:any = 0
+  public started = null
+  public running = false
+  public blankTime = "00:00"
+  public time = "00:00"
+
+  //@ViewChild('videoPlayer',null) videoPlayer: ElementRef;
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+      this.scrHeight = window.innerHeight;
+      console.log('h',this.scrHeight);
+  }
+  @Inject(DOCUMENT) document:HTMLElement;
+
+  constructor( private router       : Router,
+      			   private route        : ActivatedRoute,
+      			   private zone         : NgZone,
+      			   public alertCtrl     : AlertController,
+      			   public loadingCtrl   : LoadingController,
+      			   private elementRef   : ElementRef,
+      			   public  restProvider : RestapiProvider,
+               public platform      : Platform,
+               private file         : File,
+               private transfer     : FileTransfer,
+               private toastCtrl    : ToastController,
+               private media        : Media,
+               private datePipe     : DatePipe
+      			 )
+  {
+       this.tracks = this.restProvider.getSpofityTrackDetail();
+       this.platform.ready().then(() => {
+        if (this.platform.is('ios')) {
+          this.storageDirectory = this.file.dataDirectory;
+        } else if (this.platform.is('android')) {
+          this.storageDirectory = this.file.externalDataDirectory;
+        } else {
+          this.storageDirectory = this.file.cacheDirectory;
+        }
+      });
+		   this.getScreenSize();
+		   this.route.queryParams.subscribe(params => {
+		       console.log('params: ', params);
+		      if (this.router.getCurrentNavigation().extras.state) {
+			         this.id = this.router.getCurrentNavigation().extras.state.warmup_id;
+			         this.type = this.router.getCurrentNavigation().extras.state.type;
+			         //console.log(this.id,this.type);
+		      }
+		    });
+   }
+
+
+
+   ngOnInit() {
+    this.prepareAudioFile();
+  }
+
+  prepareAudioFile() {
+    let url =
+      'https://ia800207.us.archive.org/29/items/MLKDream/MLKDream_64kb.mp3';
+    this.platform.ready().then(() => {
+      this.file
+        .resolveDirectoryUrl(this.storageDirectory)
+        .then(resolvedDirectory => {
+          // inspired by: https://github.com/ionic-team/ionic-native/issues/1711
+          console.log('resolved  directory: ' + resolvedDirectory.nativeURL);
+          this.file
+            .checkFile(resolvedDirectory.nativeURL, this.filename)
+            .then(data => {
+              if (data == true) {
+                // exist
+                this.getDurationAndSetToPlay();
+              } else {
+                // not sure if File plugin will return false. go to download
+                console.log('not found!');
+                throw { code: 1, message: 'NOT_FOUND_ERR' };
+              }
+            })
+            .catch(async err => {
+              console.log('Error occurred while checking local files:');
+              console.log(err);
+              if (err.code == 1) {
+                // not found! download!
+                console.log('not found! download!');
+                let loadingEl = await this.loadingCtrl.create({
+                  message: 'Downloading the song from the web...'
+                });
+                loadingEl.present();
+                const fileTransfer: FileTransferObject = this.transfer.create();
+                fileTransfer
+                  .download(url, this.storageDirectory + this.filename)
+                  .then(entry => {
+                    console.log('download complete' + entry.toURL());
+                    loadingEl.dismiss();
+                    this.getDurationAndSetToPlay();
+                  })
+                  .catch(err_2 => {
+                    console.log('Download error!');
+                    loadingEl.dismiss();
+                    console.log(err_2);
+                  });
+              }
+            });
+        });
+    });
+  }
+
+  createAudioFile(pathToDirectory, filename): MediaObject {
+    if (this.platform.is('ios')) {
+      //ios
+      return this.media.create(
+        pathToDirectory.replace(/^file:\/\//, '') + '/' + filename
+      );
+    } else {
+      // android
+      return this.media.create(pathToDirectory + filename);
+    }
+  }
+
+  getDurationAndSetToPlay() {
+    this.curr_playing_file = this.createAudioFile(
+      this.storageDirectory,
+      this.filename
+    );
+
+    this.curr_playing_file.play();
+    this.curr_playing_file.setVolume(0.0); // you don't want users to notice that you are playing the file
+    let self = this;
+    this.get_duration_interval = setInterval(function() {
+      if (self.duration == -1) {
+        self.duration = ~~self.curr_playing_file.getDuration(); // make it an integer
+      } else {
+        self.curr_playing_file.stop();
+        self.curr_playing_file.release();
+        self.setRecordingToPlay();
+        clearInterval(self.get_duration_interval);
+      }
+    }, 100);
+  }
+
+  getAndSetCurrentAudioPosition() {
+    let diff = 1;
+    let self = this;
+    this.get_position_interval = setInterval(function() {
+      let last_position = self.position;
+      self.curr_playing_file.getCurrentPosition().then(position => {
+        if (position >= 0 && position < self.duration) {
+          if (Math.abs(last_position - position) >= diff) {
+            // set position
+            self.curr_playing_file.seekTo(last_position * 1000);
+          } else {
+            // update position for display
+            self.position = position;
+          }
+        } else if (position >= self.duration) {
+          self.stopPlayRecording();
+          self.setRecordingToPlay();
+        }
+      });
+    }, 100);
+  }
+
+  setRecordingToPlay() {
+    this.curr_playing_file = this.createAudioFile(
+      this.storageDirectory,
+      this.filename
+    );
+    this.curr_playing_file.onStatusUpdate.subscribe(status => {
+      // 2: playing
+      // 3: pause
+      // 4: stop
+      this.message = status;
+      switch (status) {
+        case 1:
+          this.is_in_play = false;
+          break;
+        case 2: // 2: playing
+          this.is_in_play = true;
+          this.is_playing = true;
+          break;
+        case 3: // 3: pause
+          this.is_in_play = true;
+          this.is_playing = false;
+          break;
+        case 4: // 4: stop
+        default:
+          this.is_in_play = false;
+          this.is_playing = false;
+          break;
+      }
+    });
+    console.log('audio file set');
+    this.message = 'audio file set';
+    this.is_ready = true;
+    this.getAndSetCurrentAudioPosition();
+  }
+
+  playRecording() {
+    this.curr_playing_file.play();
+    this.toastCtrl
+      .create({
+        message: `Start playing from ${this.fmtMSS(this.position)}`,
+        duration: 2000
+      })
+      .then(toastEl => toastEl.present());
+  }
+
+  pausePlayRecording() {
+    this.curr_playing_file.pause();
+    this.toastCtrl
+      .create({
+        message: `Paused at ${this.fmtMSS(this.position)}`,
+        duration: 2000
+      })
+      .then(toastEl => toastEl.present());
+  }
+
+  stopPlayRecording() {
+    this.curr_playing_file.stop();
+    this.curr_playing_file.release();
+    clearInterval(this.get_position_interval);
+    this.position = 0;
+  }
+
+  controlSeconds(action) {
+    let step = 15;
+
+    let number = this.position;
+    switch (action) {
+      case 'back':
+        this.position = number < step ? 0.001 : number - step;
+        this.toastCtrl
+          .create({
+            message: `Went back ${step} seconds`,
+            duration: 2000
+          })
+          .then(toastEl => toastEl.present());
+        break;
+      case 'forward':
+        this.position =
+          number + step < this.duration ? number + step : this.duration;
+        this.toastCtrl
+          .create({
+            message: `Went forward ${step} seconds`,
+            duration: 2000
+          })
+          .then(toastEl => toastEl.present());
+        break;
+      default:
+        break;
+    }
+  }
+
+  fmtMSS(s) {
+    return this.datePipe.transform(s * 1000, 'mm:ss');
+
+    /** The following has been replaced with Angular DatePipe */
+    // // accepts seconds as Number or String. Returns m:ss
+    // return (
+    //   (s - // take value s and subtract (will try to convert String to Number)
+    //     (s %= 60)) / // the new value of s, now holding the remainder of s divided by 60
+    //     // (will also try to convert String to Number)
+    //     60 + // and divide the resulting Number by 60
+    //   // (can never result in a fractional value = no need for rounding)
+    //   // to which we concatenate a String (converts the Number to String)
+    //   // who's reference is chosen by the conditional operator:
+    //   (9 < s // if    seconds is larger than 9
+    //     ? ':' // then  we don't need to prepend a zero
+    //     : ':0') + // else  we do need to prepend a zero
+    //   s
+    // ); // and we add Number s to the string (converting it to String as well)
+  }
+
+
+loadWorkoutVideo(){
+  this.restProvider.showLoader();
+  this.restProvider.api_method('get','get_workout_vids_detail/'+this.id,null,null).subscribe((data)=>{
+     this.restProvider.dismissLoader();
+     console.log('get_workout_vids_detail/',data);
+     if(data['status']=='success'){
+       this.count_vid_list_length=data['data'].length;
+       if(data['data'].length > 0){
+           this.warmup_res_data=data['data'];
+           this.index=0;
+           this.thumbnail=data['thumbnail'] ? data['thumbnail'] : '../assets/images/vid_bg.jpg';
+           this.setVideo();//
+           //this.video_first=data['data']['0'];
+
+         //  this.set=this.video_first.set;
+         //  this.video=this.video_first.video;
+         //  this.thumbnail=this.video_first.thumbnail;
+           //this.video_title=this.video_first.video_title;
+
+           this.showWarning  = data['show_waring_note'] ? data['show_waring_note'] : 0;
+           this.showSpecialNote  =data['show_special_note'] ? data['show_special_note'] : 1;
+           this.specialNote  = data['special_note'] ? data['special_note'] : '';
+           this.warningNote  = data['warning_note'] ? data['warning_note'] : '';
+
+         //  if(data['data']['1']){
+           //  this.Next_vid_title=data['data']['1']['video_title'];
+         //  }else{
+             //this.Next_vid_title='Finished';
+             // this.previous=0;
+         //  }
+
+         //  console.log('first_vid',this.video_first)
+         //  console.log('warmup_res_data',this.warmup_res_data);
+       }
+     }
+ },error=>{
+     console.log('error', error);
+     this.restProvider.dismissLoader();
+ });
+}
+ionViewWillEnter(){
+  this.loadWorkoutVideo();
+}
+
+async workoutFinished(timeStamp) {
+  let me=this;
+  const alert = await this.alertCtrl.create({
+    header: 'Nice Work',
+    //subHeader: 'You have finished this workout',
+    cssClass: 'secondary',
+    message: '<h1>'+timeStamp+'</h1><p>You have finished this workout</p>',
+		buttons: [
+		{
+		  text: 'Continue Workout',
+      role: 'cancel',
+		  handler:  () => {
+		    me.close_vid();
+		  }
+		}]
+	});
+	await alert.present();
+}
+swipe_vid(arg){
+  let me=this;
+  let timeStamp=this.time;
+  if(arg=='next'){
+    this.index++;
+  }else{
+    this.index--;
+  }
+
+  if(this.index>=this.count_vid_list_length){
+      console.log('FINISH this.index',this.index,'::count_vid_list_length::',this.count_vid_list_length);
+      console.log('time::',timeStamp);
+      me.stopClock();
+      me.stopAllVideo(function(r){
+        me.workoutFinished(timeStamp);
+      });
+  }else{
+    if((this.index > this.count_vid_list_length-1) || this.index < 0 ){
+      this.index=0;
+    }
+    this.setVideo();//
+  }
+
+}
+stopAllVideo(callback){
+  let me=this;
+  let workoutVideos=me.warmup_res_data;
+  let checkOneByOne=function(){
+    if(workoutVideos.length>0){
+      let item=workoutVideos.pop();
+      if(item){
+        let oldVideoEle = <HTMLVideoElement> document.getElementById(item['id']);
+        if(oldVideoEle){ oldVideoEle.pause(); checkOneByOne();}
+      }else{
+        checkOneByOne();
+      }
+    }else{
+      callback(true);
+    }
+  }
+  checkOneByOne();
+}
+setVideo(){
+  try{
+
+    this.video_first = this.warmup_res_data[this.index];
+
+    for (let _i = 0; _i < this.count_vid_list_length; _i++) {
+       //console.log(this.index,'footer-indicator-',_i);
+       if(document.getElementById('footer-indicator-'+_i)){
+         document.getElementById('footer-indicator-'+_i).style.background= _i>this.index ? 'var(--ion-color-light)' :'var(--ion-color-primary)'  ;
+       }
+    }
+
+    if(this.video_first){
+
+      this.set=this.video_first.set;
+      this.video=this.video_first.video;
+      //this.thumbnail=this.video_first.thumbnail;
+      this.video_title=this.video_first.video_title;
+
+      if(this.index < this.count_vid_list_length-1){
+        let next=this.warmup_res_data[this.index+1];
+        this.Next_vid_title=next.video_title;
+      }else{
+        this.Next_vid_title='Finished';
+      }
+
+      this.playVideo();//this.video
+    }
+
+  }catch(e){
+    console.log('setVideo Catch EE ',e);
+  }
+}
+playCurrentVideo(){
+  let me=this;
+  if(me.currentVideoEle && typeof me.currentVideoEle.play === 'function'){
+    me.currentVideoEle.play();
+  }
+}
+pauseCurrentVideo(){
+  let me=this;
+  if(me.currentVideoEle && typeof me.currentVideoEle.pause === 'function'){
+    me.currentVideoEle.pause();
+  }
+}
+playVideo(){
+
+  try{
+
+    let me=this;
+    let videoObj =me.warmup_res_data[me.index];
+    me.warmup_res_data.forEach((item, index) => {
+        if(index!=me.index){
+          me.warmup_res_data[index]['isPlaying']=0; // hidden
+        }
+        let oldVideoEle = <HTMLVideoElement> document.getElementById(item['id']);
+        if(oldVideoEle){
+          //console.log('is old ended::',oldVideoEle.ended);
+          oldVideoEle.pause();
+        }
+    });
+
+    me.warmup_res_data[me.index]['isPlaying']=1;//show
+
+    let currentVideoEle = <HTMLVideoElement> document.getElementById(videoObj['id']);
+    //console.log('playVideo currentVideoEle:::',currentVideoEle);
+    if(currentVideoEle){
+      currentVideoEle.currentTime = 0;
+      currentVideoEle.play();
+      me.currentVideoEle=currentVideoEle;
+      setTimeout(function(){
+        currentVideoEle.onended = (event) => {
+            console.log('calling end video',event);
+            setTimeout(function(){me.swipe_vid('next');},100);
+        };
+      },500);
+
+    }
+  }catch(e){
+    console.log('VIDEO TAG Catch EE ',e);
+  }
+
+}
+
+
+playAudio(arg){
+try{
+  if(arg=='beep'){
+			let audio = new Audio();
+			audio.src = "../assets/audio/beep.mp3";
+			audio.load();
+			audio.play();
+	}
+	if(arg=='beep2'){
+			let audio = new Audio();
+			audio.src = "../assets/audio/beep_2.mp3";
+			audio.load();
+			audio.play();
+	}
+}catch(e){
+  console.log('playAudio Catch Erroor::',arg,e);
+}
+
+
+}
+
+startCountdown(){
+
+  var interval = setInterval(() => {
+      // console.log(  this.counter);
+      this.counter--;
+
+      if(this.counter==3 || this.counter==2 || this.counter==1){
+        this.playAudio('beep');
+      }
+
+      if(this.counter < 1 ){
+        this.playAudio('beep2');
+        this.resetClock();
+        //this.start();
+        clearInterval(interval);
+        this.timer_display=false;
+        // console.log('Ding!');
+        this.overlay=false;
+        this.overlay2=true;
+        this.img_thumbnil=false;
+        this.playVideo();//this.video
+      };
+  }, 1000);
+};
+stopClock(){
+  clearInterval(this.started);
+}
+
+resetClock() {
+  let me=this;
+  me.timestamp_min=0;
+  me.timestamp_sec=0;
+  me.start();
+}
+start() {
+  let me=this;
+  me.started = setInterval(me.startClock.bind(me), 1000);
+}
+startClock(){
+  let me=this;
+  let min=me.timestamp_min;
+  let sec=me.timestamp_sec+1;
+  if(sec>59){
+    min=me.timestamp_min+1;
+    sec=0;
+  }
+  me.timestamp_min=min;
+  me.timestamp_sec=sec;
+  me.time = me.zeroPrefix(min, 2) + ":" + me.zeroPrefix(sec, 2);
+}
+
+zeroPrefix(num, digit) {
+  let zero = '';
+  for(let i = 0; i < digit; i++) {
+    zero += '0';
+  }
+  return (zero + num).slice(-digit);
+}
+
+confirmationBox__() {
+  let me=this;
+  me.stopClock();
+  setTimeout(function(){
+    console.log('calling start');
+    me.start();
+  },3000);
+}
+async confirmationBox() {
+  let me=this;
+  me.stopClock();
+  me.pauseCurrentVideo();
+
+	const alert = await this.alertCtrl.create({
+	header: 'Quit Workout?',
+	message: 'Do you realy want to quit your workout.',
+		buttons: [
+		{
+		  text: 'Continue Workout',
+		  role: 'cancel',
+		  handler: () => {
+		    console.log('Confirm Cancel');
+        me.playCurrentVideo();
+        me.start();
+		  }
+		},
+		{
+		  text: 'Quit',
+		  cssClass: 'alert-danger',
+		  handler:  () => {
+		    this.quitWorkoutVideo();
+		  }
+		}]
+	});
+	await alert.present();
+}
+quitWorkoutVideo(){
+  let me=this;
+  let timeStamp=this.time;
+  setTimeout(function(){me.workoutFinished(timeStamp);},200);
+  //me.close_vid();
+}
+close_vid(){
+  this.stopClock();
+  this.router.navigate(['/tabs/tab2'] );
+  return;
+
+  console.log(this.id,this.type);
+  if(this.type=='Workout'){
+      this.restProvider.api_method('get','get_workout_detail/'+this.id,null,null).subscribe((data)=>{
+        console.log('close_vid :: get_workout_detail/::',data);
+        if(data['status']==='success'){
+
+          this.response_data=data['workout'];
+          this.restProvider.present_Modal(this.response_data,'Workout',null);
+          this.zone.run(() => {
+            this.router.navigate(['/tabs/tab2'] );
+          });
+
+        }else{
+
+        }
+      },error=>{
+          console.log('error', error);
+      });
+  }else{
+    this.router.navigate(['/tabs/tab2'] );
+  }
+
+}
+
+start_vid(){
+	this.hide_content=false;
+	this.timer_display=true;
+	this.startCountdown();
+}
+
+
+
+
+}
+
+
+layout2::::::::
+
+import { Component, OnInit,HostListener,NgZone ,ViewChild,ElementRef,Inject} from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { RestapiProvider } from  '../providers/restapis/restapis';
+import { Platform, LoadingController ,AlertController} from '@ionic/angular';
+import { MediaObject, Media } from '@ionic-native/media/ngx';
+import { DOCUMENT} from '@angular/common';
+
+@Component({ 
+  selector: 'app-play-video',
+  templateUrl: './play-video.page.html',
+  styleUrls: ['./play-video.page.scss'],
+})
+export class PlayVideoPage implements OnInit {
+    scrHeight:any;
+    response_data:any;
+    hide_content:boolean=true;
+    img_thumbnil:boolean=true;
+
+    timer_display:boolean=false;
+    overlay:boolean=true;
+    overlay2:boolean=false;
+
+    warmup_res_data:any;
+    video_first:any;
+
+    id:any;
+    type:any;
+    counter:any=10;
+
+    set:any='';
+    video:any='';
+    thumbnail:any='../assets/images/vid_bg.jpg';
+    video_title:any='';
+    Next_vid_title:any='Finished';
+    Next:any=0;
+    // previous:any=0;
+    index:any=0;
+    count_vid_list_length:any=0;
+
+    showWarning:any=0;
+    showSpecialNote:any=1;
+    specialNote:any='';
+    warningNote:any='';
+
+    timestamp_min:any=0;
+    timestamp_sec:any=0;
+    currentVideoEle:any;
+
+    tracks:any;
+    title: any;
+    artist: any;
+    image: string = 'assets/album_art.jpg';
+    filename: any = 'Baba O`reily';
+    duration: any = -1;
+    curr_playing_file: MediaObject;
+    storageDirectory: any;
+    play_The_track: string = "/android_asset/public/assets/audio/beep_2.mp3"; //note this specific url format is used in android only
+    position: any = 0;
+    get_position_interval: any;
+    is_playing = false;
+    is_in_play = false;
+    is_ready = false;
+    get_duration_interval: any;
+    display_position: any = '00:00';
+    display_duration: any = '00:00';
+
+
+  public timeBegan = null
+  public timeStopped:any = null
+  public stoppedDuration:any = 0
+  public started = null
+  public running = false
+  public blankTime = "00:00"
+  public time = "00:00"
+
+  //@ViewChild('videoPlayer',null) videoPlayer: ElementRef;
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+      this.scrHeight = window.innerHeight;
+      console.log('h',this.scrHeight);
+  }
+  @Inject(DOCUMENT) document:HTMLElement;
+
+  constructor( private router       : Router,
+      			   private route        : ActivatedRoute,
+      			   private zone         : NgZone,
+      			   public alertCtrl     : AlertController,
+      			   public loadingCtrl   : LoadingController,
+      			   private elementRef   : ElementRef,
+      			   public  restProvider : RestapiProvider,
+               public platform      : Platform,
+               private media        : Media
+      			 )
+  {
+       this.tracks = this.restProvider.getSpofityTrackDetail();
+		   this.getScreenSize();
+		   this.route.queryParams.subscribe(params => {
+		       console.log('params: ', params);
+		      if (this.router.getCurrentNavigation().extras.state) {
+			         this.id = this.router.getCurrentNavigation().extras.state.warmup_id;
+			         this.type = this.router.getCurrentNavigation().extras.state.type;
+			         //console.log(this.id,this.type);
+		      }
+		    });
+   }
+
+
+
+ngOnInit() {
+  this.prepareAudioFile();
+
+}
+prepareAudioFile() {
+   console.log('AudioPrepared:::')
+  this.platform.ready().then((res) => {
+    this.getDuration();
+  });
+}
+getDuration() {
+   this.curr_playing_file = this.media.create(this.play_The_track);
+   // on occassions, the plugin only gives duration of the file if the file is played
+   // at least once
+   this.curr_playing_file.play();
+
+   this.curr_playing_file.setVolume(0.0);  // you don't want users to notice that you are playing the file
+   const self = this;
+   // The plugin does not give the correct duration on playback start
+   // Need to check for duration repeatedly
+   let temp_duration = self.duration;
+   this.get_duration_interval = setInterval(() => {
+     if (self.duration === -1 || !self.duration) {
+       self.duration = ~~(self.curr_playing_file.getDuration());  // make it an integer
+     } else {
+       if (self.duration !== temp_duration) {
+         temp_duration = self.duration;
+       }
+       else {
+         self.curr_playing_file.stop();
+         self.curr_playing_file.release();
+
+         clearInterval(self.get_duration_interval);
+         this.display_duration = this.toHHMMSS(self.duration);
+         self.setToPlayback();
+       }
+     }
+   }, 100);
+ }
+
+ setToPlayback() {
+   this.curr_playing_file = this.media.create(this.play_The_track);
+   this.curr_playing_file.onStatusUpdate.subscribe(status => {
+     switch (status) {
+       case 1:
+         break;
+       case 2:   // 2: playing
+         this.is_playing = true;
+         break;
+       case 3:   // 3: pause
+         this.is_playing = false;
+         break;
+       case 4:   // 4: stop
+       default:
+         this.is_playing = false;
+         break;
+     }
+   });
+   this.is_ready = true;
+   this.getAndSetCurrentAudioPosition();
+ }
+
+ getAndSetCurrentAudioPosition() {
+  const diff = 1;
+  const self = this;
+  this.get_position_interval = setInterval(() => {
+    const last_position = self.position;
+    self.curr_playing_file.getCurrentPosition().then((position) => {
+      if (position >= 0 && position < self.duration) {
+        if (Math.abs(last_position - position) >= diff) {
+          // set position
+          self.curr_playing_file.seekTo(last_position * 1000);
+
+        } else {
+          // update position for display
+          self.position = position;
+          this.display_position = this.toHHMMSS(self.position);
+        }
+      } else if (position >= self.duration) {
+        self.stop();
+        self.setToPlayback();
+      }
+    });
+  }, 100);
+}
+
+play() {
+  console.log('run:: Play')
+  this.curr_playing_file.play();
+}
+
+pause() {
+  this.curr_playing_file.pause();
+}
+
+stop() {
+  this.curr_playing_file.stop();
+  this.curr_playing_file.release();
+  clearInterval(this.get_position_interval);
+  this.position = 0;
+}
+
+controlSeconds(action) {
+  const step = 5;
+  const numberRange = this.position;
+  switch (action) {
+    case 'back':
+      this.position = numberRange < step ? 0.001 : numberRange - step;
+      break;
+    case 'forward':
+      this.position = numberRange + step < this.duration ? numberRange + step : this.duration;
+      break;
+    default:
+      break;
+  }
+}
+
+ngOnDestroy() {
+  this.stop();
+}
+
+toHHMMSS(secs) {
+  var sec_num = parseInt(secs, 10)
+  var minutes = Math.floor(sec_num / 60) % 60
+  var seconds = sec_num % 60
+
+  return [minutes, seconds]
+    .map(v => v < 10 ? "0" + v : v)
+    .filter((v, i) => v !== "00" || i >= 0)
+    .join(":")
+}
+
+
+loadWorkoutVideo(){
+  this.restProvider.showLoader();
+  this.restProvider.api_method('get','get_workout_vids_detail/'+this.id,null,null).subscribe((data)=>{
+     this.restProvider.dismissLoader();
+     console.log('get_workout_vids_detail/',data);
+     if(data['status']=='success'){
+       this.count_vid_list_length=data['data'].length;
+       if(data['data'].length > 0){
+           this.warmup_res_data=data['data'];
+           this.index=0;
+           this.thumbnail=data['thumbnail'] ? data['thumbnail'] : '../assets/images/vid_bg.jpg';
+           this.setVideo();//
+           //this.video_first=data['data']['0'];
+
+         //  this.set=this.video_first.set;
+         //  this.video=this.video_first.video;
+         //  this.thumbnail=this.video_first.thumbnail;
+           //this.video_title=this.video_first.video_title;
+
+           this.showWarning  = data['show_waring_note'] ? data['show_waring_note'] : 0;
+           this.showSpecialNote  =data['show_special_note'] ? data['show_special_note'] : 1;
+           this.specialNote  = data['special_note'] ? data['special_note'] : '';
+           this.warningNote  = data['warning_note'] ? data['warning_note'] : '';
+
+         //  if(data['data']['1']){
+           //  this.Next_vid_title=data['data']['1']['video_title'];
+         //  }else{
+             //this.Next_vid_title='Finished';
+             // this.previous=0;
+         //  }
+
+         //  console.log('first_vid',this.video_first)
+         //  console.log('warmup_res_data',this.warmup_res_data);
+       }
+     }
+ },error=>{
+     console.log('error', error);
+     this.restProvider.dismissLoader();
+ });
+}
+ionViewWillEnter(){
+  this.loadWorkoutVideo();
+}
+
+async workoutFinished(timeStamp) {
+  let me=this;
+  const alert = await this.alertCtrl.create({
+    header: 'Nice Work',
+    //subHeader: 'You have finished this workout',
+    cssClass: 'secondary',
+    message: '<h1>'+timeStamp+'</h1><p>You have finished this workout</p>',
+		buttons: [
+		{
+		  text: 'Continue Workout',
+      role: 'cancel',
+		  handler:  () => {
+		    me.close_vid();
+		  }
+		}]
+	});
+	await alert.present();
+}
+swipe_vid(arg){
+  let me=this;
+  let timeStamp=this.time;
+  if(arg=='next'){
+    this.index++;
+  }else{
+    this.index--;
+  }
+
+  if(this.index>=this.count_vid_list_length){
+      console.log('FINISH this.index',this.index,'::count_vid_list_length::',this.count_vid_list_length);
+      console.log('time::',timeStamp);
+      me.stopClock();
+      me.stopAllVideo(function(r){
+        me.workoutFinished(timeStamp);
+      });
+  }else{
+    if((this.index > this.count_vid_list_length-1) || this.index < 0 ){
+      this.index=0;
+    }
+    this.setVideo();//
+  }
+
+}
+stopAllVideo(callback){
+  let me=this;
+  let workoutVideos=me.warmup_res_data;
+  let checkOneByOne=function(){
+    if(workoutVideos.length>0){
+      let item=workoutVideos.pop();
+      if(item){
+        let oldVideoEle = <HTMLVideoElement> document.getElementById(item['id']);
+        if(oldVideoEle){ oldVideoEle.pause(); checkOneByOne();}
+      }else{
+        checkOneByOne();
+      }
+    }else{
+      callback(true);
+    }
+  }
+  checkOneByOne();
+}
+setVideo(){
+  try{
+
+    this.video_first = this.warmup_res_data[this.index];
+
+    for (let _i = 0; _i < this.count_vid_list_length; _i++) {
+       //console.log(this.index,'footer-indicator-',_i);
+       if(document.getElementById('footer-indicator-'+_i)){
+         document.getElementById('footer-indicator-'+_i).style.background= _i>this.index ? 'var(--ion-color-light)' :'var(--ion-color-primary)'  ;
+       }
+    }
+
+    if(this.video_first){
+
+      this.set=this.video_first.set;
+      this.video=this.video_first.video;
+      //this.thumbnail=this.video_first.thumbnail;
+      this.video_title=this.video_first.video_title;
+
+      if(this.index < this.count_vid_list_length-1){
+        let next=this.warmup_res_data[this.index+1];
+        this.Next_vid_title=next.video_title;
+      }else{
+        this.Next_vid_title='Finished';
+      }
+
+      this.playVideo();//this.video
+    }
+
+  }catch(e){
+    console.log('setVideo Catch EE ',e);
+  }
+}
+playCurrentVideo(){
+  let me=this;
+  if(me.currentVideoEle && typeof me.currentVideoEle.play === 'function'){
+    me.currentVideoEle.play();
+  }
+}
+pauseCurrentVideo(){
+  let me=this;
+  if(me.currentVideoEle && typeof me.currentVideoEle.pause === 'function'){
+    me.currentVideoEle.pause();
+  }
+}
+playVideo(){
+
+  try{
+
+    let me=this;
+    let videoObj =me.warmup_res_data[me.index];
+    me.warmup_res_data.forEach((item, index) => {
+        if(index!=me.index){
+          me.warmup_res_data[index]['isPlaying']=0; // hidden
+        }
+        let oldVideoEle = <HTMLVideoElement> document.getElementById(item['id']);
+        if(oldVideoEle){
+          //console.log('is old ended::',oldVideoEle.ended);
+          oldVideoEle.pause();
+        }
+    });
+
+    me.warmup_res_data[me.index]['isPlaying']=1;//show
+
+    let currentVideoEle = <HTMLVideoElement> document.getElementById(videoObj['id']);
+    //console.log('playVideo currentVideoEle:::',currentVideoEle);
+    if(currentVideoEle){
+      currentVideoEle.currentTime = 0;
+      currentVideoEle.play();
+      me.currentVideoEle=currentVideoEle;
+      setTimeout(function(){
+        currentVideoEle.onended = (event) => {
+            console.log('calling end video',event);
+            setTimeout(function(){me.swipe_vid('next');},100);
+        };
+      },500);
+
+    }
+  }catch(e){
+    console.log('VIDEO TAG Catch EE ',e);
+  }
+
+}
+
+
+playAudio(arg){
+try{
+  if(arg=='beep'){
+			let audio = new Audio();
+			audio.src = "../assets/audio/beep.mp3";
+			audio.load();
+			audio.play();
+	}
+	if(arg=='beep2'){
+			let audio = new Audio();
+			audio.src = "../assets/audio/beep_2.mp3";
+			audio.load();
+			audio.play();
+	}
+}catch(e){
+  console.log('playAudio Catch Erroor::',arg,e);
+}
+
+
+}
+
+startCountdown(){
+
+  var interval = setInterval(() => {
+      // console.log(  this.counter);
+      this.counter--;
+
+      if(this.counter==3 || this.counter==2 || this.counter==1){
+        this.playAudio('beep');
+      }
+
+      if(this.counter < 1 ){
+        this.playAudio('beep2');
+        this.resetClock();
+        //this.start();
+        clearInterval(interval);
+        this.timer_display=false;
+        // console.log('Ding!');
+        this.overlay=false;
+        this.overlay2=true;
+        this.img_thumbnil=false;
+        this.playVideo();//this.video
+      };
+  }, 1000);
+};
+stopClock(){
+  clearInterval(this.started);
+}
+
+resetClock() {
+  let me=this;
+  me.timestamp_min=0;
+  me.timestamp_sec=0;
+  me.start();
+}
+start() {
+  let me=this;
+  me.started = setInterval(me.startClock.bind(me), 1000);
+}
+startClock(){
+  let me=this;
+  let min=me.timestamp_min;
+  let sec=me.timestamp_sec+1;
+  if(sec>59){
+    min=me.timestamp_min+1;
+    sec=0;
+  }
+  me.timestamp_min=min;
+  me.timestamp_sec=sec;
+  me.time = me.zeroPrefix(min, 2) + ":" + me.zeroPrefix(sec, 2);
+}
+
+zeroPrefix(num, digit) {
+  let zero = '';
+  for(let i = 0; i < digit; i++) {
+    zero += '0';
+  }
+  return (zero + num).slice(-digit);
+}
+
+confirmationBox__() {
+  let me=this;
+  me.stopClock();
+  setTimeout(function(){
+    console.log('calling start');
+    me.start();
+  },3000);
+}
+async confirmationBox() {
+  let me=this;
+  me.stopClock();
+  me.pauseCurrentVideo();
+
+	const alert = await this.alertCtrl.create({
+	header: 'Quit Workout?',
+	message: 'Do you realy want to quit your workout.',
+		buttons: [
+		{
+		  text: 'Continue Workout',
+		  role: 'cancel',
+		  handler: () => {
+		    console.log('Confirm Cancel');
+        me.playCurrentVideo();
+        me.start();
+		  }
+		},
+		{
+		  text: 'Quit',
+		  cssClass: 'alert-danger',
+		  handler:  () => {
+		    this.quitWorkoutVideo();
+		  }
+		}]
+	});
+	await alert.present();
+}
+quitWorkoutVideo(){
+  let me=this;
+  let timeStamp=this.time;
+  setTimeout(function(){me.workoutFinished(timeStamp);},200);
+  //me.close_vid();
+}
+close_vid(){
+  this.stopClock();
+  this.router.navigate(['/tabs/tab2'] );
+  return;
+
+  console.log(this.id,this.type);
+  if(this.type=='Workout'){
+      this.restProvider.api_method('get','get_workout_detail/'+this.id,null,null).subscribe((data)=>{
+        console.log('close_vid :: get_workout_detail/::',data);
+        if(data['status']==='success'){
+
+          this.response_data=data['workout'];
+          this.restProvider.present_Modal(this.response_data,'Workout',null);
+          this.zone.run(() => {
+            this.router.navigate(['/tabs/tab2'] );
+          });
+
+        }else{
+
+        }
+      },error=>{
+          console.log('error', error);
+      });
+  }else{
+    this.router.navigate(['/tabs/tab2'] );
+  }
+
+}
+
+start_vid(){
+	this.hide_content=false;
+	this.timer_display=true;
+	this.startCountdown();
+}
+
+
+
+
+}

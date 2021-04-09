@@ -1,0 +1,98 @@
+div.overlay2  {
+    width: 100%;
+    position: fixed;
+    height: 700px;
+    z-index: 2;
+    box-shadow: inset 0px 80px 8px -10px #605d5d30;
+}
+
+ion-buttons.overlay_cross_button{
+    color: var(--ion-color-dark-contrast);
+    top: 47%;
+        left: 6%;
+    font-size:calc((1em + 1vmin) + (1em + 1vmax));
+    position: absolute;
+    z-index:1000;
+}
+.div-full-video{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  /*background-image: url(http://fitapp.web-brats.com/uploads/images/1564228459.jpg);*/
+
+
+  background: no-repeat;
+  background: no-repeat;
+  background-size: contain;
+  background-position: center center;
+}
+.container-full-video{
+  position: relative;
+}
+img.thumbnil_play_vid{
+    height: 640px;
+    position: absolute;
+    z-index: 3;
+}
+video.vid_play{
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: fill;
+    background: black;
+}
+.arrow_div{
+  position: absolute;
+bottom: 0%;
+width: 100%;
+    z-index: 10;
+}
+.arrow_back{
+  padding-left: 0%;
+    font-size: calc(0.8em + 4vmin + 0.2em + 4vmax) !important;
+color: #f3f3f3;
+}
+.arrrow_forward{
+    font-size: calc(0.8em + 4vmin + 0.2em + 4vmax) !important;
+color: #fdfdfd;
+float: right;
+}
+.arrow_Play{
+//   padding-left: 0%;
+//     font-size: calc(0.8em + 4vmin + 0.2em + 4vmax) !important;
+// color: #f3f3f3;
+// position: absolute;
+// top: 44%;
+//     left: 43%;
+// z-index: 27;
+    padding-left: 0%;
+    font-size: calc(0.8em + 4vmin + 0.2em + 4vmax) !important;
+    color: #f3f3f3;
+    position: absolute;
+    width: 92%;
+    z-index: 27;
+    left: 4%;
+    text-align: center;
+    background: #0000007a;
+    margin-top: 70%;
+}
+.inner_text{
+    //       margin-top: 56%;
+    // line-height: 17vh;
+    padding: 5%;
+}
+.inner_Heading{
+  font-size: 3vh;
+}
+.bg_image{
+      position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    z-index: 1;
+        background-size: cover;
+}

@@ -1,0 +1,12 @@
+.segment{
+  --color: #000 !important;
+  position: fixed;
+  z-index: 10;
+  background: #fff;
+  .segment-button-checked{
+    --color: #000 !important;
+  }
+}
+.switch{
+  margin-top: 28px;
+}

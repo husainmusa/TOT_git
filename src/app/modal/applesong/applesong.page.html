@@ -1,0 +1,19 @@
+
+ <ion-fab-button class="rewind"  [disabled]="true" (click)="previousAppleTrack()">
+ &nbsp;&nbsp;<ion-icon name="skip-backward" style="color: black;"></ion-icon>&nbsp;&nbsp;
+ </ion-fab-button>
+ <!-- <ion-button class="play_pause_btn" *ngIf="!status" (click)="playAppleTrack()" color="light"  justify-content-center align-items-center>
+   <ion-icon name="play" class="darkColor"></ion-icon>
+ </ion-button> -->
+ <ion-button class="play_pause_btn" [disabled]="true" (click)="resume()" color="light"  justify-content-center align-items-center>
+   <ion-icon name="play" class="darkColor"></ion-icon>
+ </ion-button>
+
+ <!-- <ion-button class="play_pause_btn" *ngIf="status==1" (click)="pauseAppleTrack()" color="light" justify-content-center align-items-center>
+  <ion-icon name="pause" class="darkColor"></ion-icon>
+ </ion-button> -->
+
+  <ion-fab-button class="fastforward" [disabled]="true" (click)="nextAppleTrack()">
+  &nbsp;&nbsp;<ion-icon name="skip-forward" style="color: black;"></ion-icon>&nbsp;&nbsp;
+  </ion-fab-button>
+ <ion-icon class="infinite" name="infinite"></ion-icon>

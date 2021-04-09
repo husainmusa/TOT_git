@@ -1,0 +1,22 @@
+
+	 ion-item.edit_list{
+	   --background:#FFFFFF;
+    	/*--color:#9E9E9E;*/
+		font-size:80%;
+
+	   ion-label {
+	   	width: 27%;
+        flex: none!important;
+
+	   }
+
+	   ion-input{
+			 --placeholder-opacity: 1;
+	   	/*--color:#616161;*/
+
+	   }
+	   ion-select {
+	   	    padding-left: 0px!important;
+
+	   }
+	}

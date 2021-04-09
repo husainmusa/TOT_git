@@ -1,0 +1,288 @@
+<ion-content class="login Aligner-item--top">
+    <!-- Logo -->
+    <div padding-horizontal text-center class="app_title">
+      <h4 no-margin>
+        <ion-text color="dark"   class="fw700">Create Profile</ion-text>
+      </h4>
+    </div>
+    <div  *ngIf="show_dialog" >
+    <form [formGroup]="onRegisterForm" class="list-form">
+      <div padding>
+      	    <ion-item >
+              <ion-input  name="name" type="text" placeholder="Name" formControlName="name" required></ion-input>
+            </ion-item>
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('name').touched && onRegisterForm.get('name').hasError('required')">
+               <ion-text  color="danger">
+                 <small>This field is required</small>
+               </ion-text>
+            </p>
+            <ion-item >
+              <ion-input  name="email" type="email" placeholder="E-mail" formControlName="email" required></ion-input>
+            </ion-item>
+
+             <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('email').touched && onRegisterForm.get('email').hasError('required')">
+               <ion-text  color="danger">
+                 <small>This field is required</small>
+               </ion-text>
+             </p>
+             <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('email').touched && onRegisterForm.get('email').hasError('pattern')">
+              <ion-text  color="danger">
+                <small>Invalid Email Id.</small>
+              </ion-text>
+            </p>
+
+            <ion-item >
+              <ion-label class="lebel_guest" floating primary >Gender</ion-label>
+              <ion-select class="with70" [interfaceOptions]="cssOptions"  formControlName="gender" placeholder="Select One"  (ionChange)="showWomenStatus($event)" required>
+                  <ion-select-option value="female">Female</ion-select-option>
+                  <ion-select-option value="male">Male</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('gender').touched && onRegisterForm.get('gender').hasError('required')">
+               <ion-text  color="danger">
+                 <small>This field is required</small>
+               </ion-text>
+            </p>
+
+            <ion-item >
+              <ion-label class="lebel_guest " floating primary>Level</ion-label>
+              <ion-select class="with70" [interfaceOptions]="cssOptions" formControlName="fitness_level" placeholder="Select One" required>
+                  <ion-select-option value="beginner" >Beginner</ion-select-option>
+                  <ion-select-option value="experienced">Experienced</ion-select-option>
+                  <ion-select-option value="athletic">Athletic</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('fitness_level').touched && onRegisterForm.get('fitness_level').hasError('required')">
+               <ion-text  color="danger">
+                 <small>This field is required</small>
+               </ion-text>
+            </p>
+            <ion-item class="edit_list">
+              <ion-label class="lebel_guest" floating primary>Goals</ion-label>
+              <ion-select class="with70" [interfaceOptions]="cssOptions" formControlName="interested_in" placeholder="Select" required>
+                  <ion-select-option value="lose weight">Lose weight</ion-select-option>
+                  <ion-select-option value="stay in shape">Stay in shape</ion-select-option>
+                  <ion-select-option value="gain muscle" >Gain muscle</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('interested_in').touched && onRegisterForm.get('interested_in').hasError('required')">
+               <ion-text  color="danger">
+                 <small>This field is required</small>
+               </ion-text>
+            </p>
+            <ion-item class="edit_list" *ngIf="show_women_status" >
+              <ion-label class="lebel_guest" > Status</ion-label>
+               <ion-select class="with70" [interfaceOptions]="cssOptions" formControlName="women_status"   placeholder="Select" >
+                  <ion-select-option value="currently pregnant">Currently pregnant</ion-select-option>
+                  <ion-select-option value="recently gave birth">Recently gave birth</ion-select-option>
+                  <ion-select-option value="pre pregnancy">Pre pregnancy</ion-select-option>
+                  <ion-select-option value="post pregnancy">Post pregnancy</ion-select-option>
+                  <ion-select-option value="not applicable">Not applicable</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item >
+              <ion-input formControlName="age" name="age" type="tel" (keypress)="IsNumeric($event,3)" placeholder="Age"  value="guestUserDtl.age"   required></ion-input>
+            </ion-item>
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('age').touched && onRegisterForm.get('age').hasError('required')">
+               <ion-text  color="danger">
+                 <small>This field is required</small>
+               </ion-text>
+            </p>
+
+
+            <ion-item >
+              <ion-label class="lebel_guest" > Height</ion-label>
+            </ion-item>
+
+            <ion-item class="edit_list">
+
+
+          		<ion-row  class="hor-div ion-justify-content-start align-items-stretch">
+
+          			<ion-col size="4" *ngIf="onRegisterForm.value.height_unit=='FEET'">
+          				<ion-select formControlName="height_feet"  name="height_feet"  placeholder="Height Feet"  required>
+          					<ion-select-option value="3">3 Feet</ion-select-option>
+          					<ion-select-option value="4" selected>4 Feet</ion-select-option>
+          					<ion-select-option value="5">5 Ft</ion-select-option>
+          					<ion-select-option value="6">6 Ft</ion-select-option>
+          					<ion-select-option value="7">7 Ft</ion-select-option>
+          					<ion-select-option value="8">8 Ft</ion-select-option>
+          					<ion-select-option value="9">9 Ft</ion-select-option>
+          					<ion-select-option value="10">10 Ft</ion-select-option>
+          				</ion-select>
+          			</ion-col>
+          			<ion-col size="4" *ngIf="onRegisterForm.value.height_unit=='FEET'">
+          				<ion-select formControlName="height_inches" name="height_inches"  placeholder="Height Inchaes"  required>
+          					<ion-select-option value="0">0 In</ion-select-option>
+          					<ion-select-option value="1">1 In</ion-select-option>
+          					<ion-select-option value="2" selected>2 In</ion-select-option>
+          					<ion-select-option value="3">3 In</ion-select-option>
+          					<ion-select-option value="4">4 In</ion-select-option>
+          					<ion-select-option value="5">5 In</ion-select-option>
+          					<ion-select-option value="6">6 In</ion-select-option>
+          					<ion-select-option value="7">7 In</ion-select-option>
+          					<ion-select-option value="8">8 In</ion-select-option>
+          					<ion-select-option value="9">9 In</ion-select-option>
+          					<ion-select-option value="10">10 In</ion-select-option>
+          					<ion-select-option value="11">11 In</ion-select-option>
+          				</ion-select>
+          			</ion-col>
+
+          			<ion-col size="8" *ngIf="onRegisterForm.value.height_unit=='CM'">
+          				<ion-input formControlName="body_height" (keypress)="IsNumeric($event,6)" type="number"  name="body_height"  placeholder="height in CM"></ion-input>
+          			</ion-col>
+          			<ion-col size="4">
+          				<ion-select formControlName="height_unit"  name="height_unit"  placeholder=""  required>
+          					<ion-select-option value="FEET">Feet</ion-select-option>
+          					<ion-select-option value="CM" selected>CM</ion-select-option>
+          				</ion-select>
+          			</ion-col>
+          		</ion-row>
+            </ion-item>
+
+
+            <ion-item >
+              <ion-input formControlName="body_weight" type="tel" (keypress)="IsNumeric($event,3)"  name="body_weight"  placeholder="Weight"    required></ion-input>
+              <ion-select [interfaceOptions]="cssOptions" id="weight_unit" slot="end" formControlName="weight_unit"  name="weight_unit"  placeholder="Unit"  required>
+                  <ion-select-option value="KG" selected>KG</ion-select-option>
+                  <ion-select-option value="LBS">LBS</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('body_weight').touched && onRegisterForm.get('body_weight').hasError('required')">
+               <ion-text  color="danger">
+                 <small>This field is required</small>
+               </ion-text>
+            </p>
+
+              <ion-item  class="edit_list" >
+                <ion-input  formControlName="targeted_weight" placeholder="Target Weight"  type="tel" (keypress)="IsNumeric($event,3)" ></ion-input>
+                <ion-select [interfaceOptions]="cssOptions" id="target_weight_unit" slot="end" formControlName="target_weight_unit"  name="target_weight_unit"  placeholder="Unit"  >
+                    <ion-select-option value="KG" selected>KG</ion-select-option>
+                    <ion-select-option value="LBS">LBS</ion-select-option>
+                  </ion-select>
+              </ion-item>
+              <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('targeted_weight').touched && onRegisterForm.get('interested_in').value !='stay in shape' && onRegisterForm.get('targeted_weight').hasError('required')">
+                 <ion-text  color="danger">
+                   <small>This field is required</small>
+                 </ion-text>
+              </p>
+
+
+
+
+
+            <ion-item >
+              <ion-input name="password" type="password" formControlName="password"  placeholder="Password"  required></ion-input>
+            </ion-item>
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('password').touched && onRegisterForm.get('password').hasError('required')">
+               <ion-text  color="danger">
+                 <small>This field is required</small>
+               </ion-text>
+            </p>
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('password').touched && onRegisterForm.get('password').hasError('minlength')">
+               <ion-text  color="danger">
+                 <small>Passord is too short.. password must be have atleast 6 chatacters</small>
+               </ion-text>
+            </p>
+
+            <ion-item margin-bottom>
+              <ion-input formControlName="password_confirmation"   name="password_confirmation" type="password" placeholder="Retype-Password"  required></ion-input>
+            </ion-item>
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('password_confirmation').touched && onRegisterForm.get('password_confirmation').hasError('required')">
+               <ion-text  color="danger">
+                 <small> This field is required</small>
+               </ion-text>
+            </p>
+
+            <p class="text08" no-padding no-margin text-left *ngIf="onRegisterForm.get('password').touched && onRegisterForm.get('password').hasError('minlength')">
+               <ion-text  color="danger">
+                 <small>password does not match</small>
+               </ion-text>
+            </p>
+      </div>
+
+       <ion-grid class="btn-group" no-margin no-padding>
+          <ion-row no-margin no-padding>
+
+            <ion-col no-margin no-padding>
+              <ion-button padding icon-left size="medium" expand="full" color="primary"  type="submit" (click)="signUp()"  tappable>
+              <ion-icon name="log-in"></ion-icon>
+              Sign Up
+              </ion-button>
+            </ion-col>
+            <ion-col  no-margin no-padding>
+             <ion-button padding icon-left size="medium"  expand="full" color="primary"   (click)="goToLogin()"  tappable>
+               Cancel
+              </ion-button>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+
+    </form>
+    <!-- Other links -->
+
+    <div text-center margin-top padding>
+      <span (click)="goToLogin()" class="paz" tappable>
+        <ion-text color="dark"> I have an account ? <strong> Sign In</strong>
+        </ion-text>
+      </span>
+      <p text-center>
+        <ion-text color="dark">
+          Or
+        </ion-text>
+      </p>
+        <ion-grid class="btn-group">
+          <ion-row>
+
+            <ion-col size="12"><ion-button  expand="full" color="danger" (click)="doGoogleLogin()">
+                <ion-icon slot="icon-only" name="logo-google" ></ion-icon>LOGIN WITH GOOGLE
+              </ion-button></ion-col>
+            <ion-col size="12">
+              <ion-button  expand="full" color="secondary" (click)="facebookLogin();" >
+                <ion-icon slot="icon-only" name="logo-facebook" ></ion-icon>LOGIN WITH FACEBOOK
+              </ion-button>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+  <!--     <ion-grid class="btn-group">
+        <ion-row>
+          <ion-col size="2"></ion-col>
+          <ion-col size="4"><ion-button shape="round" expand="full" color="danger" (click)="doGoogleLogin()">
+              <ion-icon slot="icon-only" name="logo-google" ></ion-icon>
+            </ion-button></ion-col>
+          <ion-col size="4">
+            <ion-button shape="round" expand="full" color="secondary" (click)="facebookLogin();">
+            <ion-icon slot="icon-only" name="logo-facebook" ></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col size="2"></ion-col>
+        </ion-row>
+      </ion-grid> -->
+    </div>
+    </div>
+    <div *ngIf="show_verify" >
+       <form [formGroup]="onVerify" class="list-form">
+      <div padding>
+            <ion-item margin-bottom>
+              <ion-input  name="otp" type="text" placeholder="OTP" formControlName="otp" required></ion-input>
+            </ion-item>
+            <p ion-text class="text08" *ngIf="onVerify.get('otp').touched && onVerify.get('otp').hasError('required')">
+              <ion-text color="warning">
+                This field is required
+              </ion-text>
+            </p>
+
+
+      </div>
+      <ion-button padding icon-left size="medium" expand="full" color="primary"  type="submit" (click)="Verify()" [disabled]="!onVerify.valid" tappable>
+        <ion-icon name="log-in"></ion-icon>
+            Verify otp
+      </ion-button>
+    </form>
+
+    </div>
+</ion-content>

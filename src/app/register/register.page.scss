@@ -1,0 +1,30 @@
+:host {
+
+}
+
+ion-item{
+    --background: white;
+    --color: #666666;
+    --padding-start: 0px!important;
+}
+
+ion-button{
+    --background: #062f77;
+}
+
+.app_title{
+  margin:50px 0px 10px 0px;
+}
+.text08{
+  padding-left: 0px!important;
+}
+.divHeight{
+
+}
+
+.hor-div{
+  width:100%;
+  ion-select{
+    max-width: 100% !important;
+  }
+}

@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+     <ion-title text-center><h5>Ask Coach</h5></ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+   <img src="../assets/images/warmup_cover.jpg" class="chat_bg_img" style="">
+   <ion-card no-margin class="coach_container" *ngIf="chat_data">
+       <ion-card class="coach_inner_container_main" *ngIf="hasSubscription>0">
+           <form  [formGroup]="coachForm" class="list-form">
+               <ion-card-content class="coach_textbox">
+                   <ion-label position="floating">Message</ion-label>
+                  <ion-textarea formControlName="message" name="message" value="" placeholder=""></ion-textarea>
+               </ion-card-content>
+                <p text-center class="text08" *ngIf="coachForm.get('message').touched && coachForm.get('message').hasError('required')">
+                  <ion-text  color="danger">
+                    This field is required
+                  </ion-text>
+                </p>
+               <ion-button type="submit" color="dark" expand="full" (click)="sendCoach()">Send</ion-button>
+         </form>
+     </ion-card>
+     <ion-card class="coach_inner_container_main" *ngIf="hasSubscription==0">
+       <p text-center class="text08">
+         <ion-text  color="dark" style="font-weight: 700;">
+           <!--Sorry! You did not subscribed any plan, this feature available only for subscribed user's.-->
+           Want to ask coach a question? Please subscribe to one of our programs 
+         </ion-text>
+       </p>
+    </ion-card>
+   </ion-card>
+</ion-content>

@@ -1,0 +1,155 @@
+
+<ion-header>
+  <ion-toolbar>
+     <ion-title text-center>
+       <h5>Workouts</h5>
+     </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="mydata">
+
+  <!-- tabs Segment -->
+  <ion-segment mode="ios" color="primary" (ionChange)="segmentChanged($event)" [(ngModel)]="segmentCategory" class="segment">
+    <ion-segment-button color="primary" id="{{cat.tab_id}}"  [value]="cat.tab_id" *ngFor="let cat of segments">
+      <ion-label>{{cat.tab_name}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="">
+    </ion-refresher-content>
+  </ion-refresher>
+
+
+    <div class="" style="margin-top: 4.5vh;">
+      <ion-grid >
+    	  <ion-row text-center>
+    	    <ion-col size="6" size-sm="3" size-md="4" size-lg="3" size-xl="3" *ngFor="let workout of visibleWorkoutData">
+    		    <ion-card class="card tech_card tech_card_border" >
+    		    	<div class="overlay_img">
+                  <div>
+                      <ion-card-subtitle class="vid_overlay_title text_desc">
+                        <ion-icon name="play" style="margin:0 auto;"></ion-icon>
+                      </ion-card-subtitle>
+                      <!--<ion-card-subtitle class="img_overlay_title text_desc"  *ngIf="workout.video_type=='free'">Free</ion-card-subtitle>-->
+                  </div>
+    		    	    <ion-card-subtitle class="img_overlay_title text_desc" *ngIf="workout.video_type=='paid' ">Premium</ion-card-subtitle>
+                  <!--<ion-card-subtitle class="img_overlay_title text_desc" *ngIf="workout.video_type=='paid' && userInfo.isFeatureEnabled==1">Unlock</ion-card-subtitle> && userInfo.isFeatureEnabled==0 -->
+
+    		          <img (click)="presentModal(workout.id)" style="height:34vh;" src="{{workout.horz_img}}">
+    		      </div>
+
+    		         <ion-card-header class="padding-left-fitapp">
+    		          <ion-card-subtitle class="text_heading text-wrapper-heading">{{workout.video_title }}</ion-card-subtitle>
+    		        </ion-card-header>
+    		        <ion-card-content class="padding-left-fitapp text-wrapper-description text_desc" >
+                  {{(workout.video_description.length>40)? (workout.video_description | slice:0:40)+'..':(workout.video_description)}}
+    				    </ion-card-content>
+
+                <!--<div class="calories_time_container" style="">
+                  <span>
+                      <ion-icon  class="cal_icon" name="flame" ></ion-icon>
+                      <ion-label class="cal_txt" >{{workout.calories}}</ion-label>
+                  </span>
+                  <span>
+                       <ion-icon  class="cal_icon"  name="time"></ion-icon>
+                       <ion-label class="cal_txt"> {{workout.time_duration}}</ion-label>
+                  </span>
+                </div>-->
+
+    		    </ion-card>
+    	    </ion-col>
+    	  </ion-row>
+    	</ion-grid>
+    </div>
+
+</ion-content>
+
+ <!-- Skeleton screen -->
+<div *ngIf="!mydata">
+  <div class="ion-padding custom-skeleton">
+    <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+    <ion-skeleton-text animated></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 88%"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+  </div>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+    </ion-list-header>
+    <ion-item>
+        <ion-thumbnail slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+
+  </ion-list>
+</div>

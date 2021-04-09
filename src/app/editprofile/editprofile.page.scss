@@ -1,0 +1,49 @@
+
+
+	 ion-item.edit_list{
+	   --background:#FFFFFF;
+    	/*--color:#9E9E9E;*/
+		font-size:80%;
+
+	   ion-label {
+	   	width: 37%;
+        flex: none!important;
+
+	   }
+
+	   ion-input{
+
+	   	/*--color:#616161;*/
+
+	   }
+	   ion-select {
+	   	    padding-left: 0px!important;
+
+	   }
+		 .hor-div{
+			 width:100%;
+			 ion-select{
+				 max-width: 100% !important;
+			 }
+		 }
+		 div.row{
+			 width: 100%;display: flex;
+			 div.div_30{
+				 width:30%;
+
+			 }
+			 div.div_70{
+				 width:70%;
+
+			 }
+			 div.div_40{
+				 width:40%;
+
+			 }
+		 }
+	}
+	.edit_image{
+		font-size: 23px;
+		color: #7d7d7d;
+		padding-top: 24px;
+	}

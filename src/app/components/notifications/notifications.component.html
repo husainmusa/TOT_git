@@ -1,0 +1,18 @@
+<ion-list no-padding no-margin>
+    <ion-list-header color="dark">
+      <ion-label class="fw700">Settings</ion-label>
+
+    </ion-list-header>
+    <ion-item  (click)="navigatoEditprofile()" color="light" class="">
+      <ion-icon name="person" color="primary"></ion-icon>
+      <p>&nbsp;&nbsp;Edit Profile</p>
+    </ion-item>
+    <ion-item (click)="goToPaymentHistory()" color="light" class="">
+      <ion-icon name="filing" color="primary"></ion-icon>
+      <p>&nbsp;&nbsp;Payment History</p>
+    </ion-item>
+    <ion-item (click)="logout()" color="light" class="">
+      <ion-icon name="log-out" color="primary"></ion-icon>
+      <p>&nbsp;&nbsp;Logout</p>
+    </ion-item>
+  </ion-list>

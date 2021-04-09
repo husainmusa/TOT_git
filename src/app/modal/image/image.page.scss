@@ -1,0 +1,30 @@
+:host {
+  ion-content {
+
+  }
+  ion-header {
+
+  }
+
+}
+ ion-header {
+   --min-height:38px !important;
+  }
+
+ion-content {
+    img {
+        object-fit: cover;
+    }
+
+    .warmupTitle{
+      position: absolute;
+      bottom: 10%;
+      width: 100%;
+      text-align: left;
+      font-size: calc(0.2em + 1vmin + 0.2em + 1vmax);
+      color: var(--ion-color-medium-contrast);
+      font-weight: 900;
+      text-shadow: 1px 1px #222428;
+      padding-left: 10px;
+    }
+}

@@ -1,0 +1,33 @@
+	 ion-item.edit_list{
+	   --background:#FFFFFF;
+    	--color:#9E9E9E;
+		font-size:80%;
+
+	   ion-label {
+	   	width: 27%;
+        flex: none!important;
+
+	   }
+
+	   ion-input{
+
+	   	--color:#616161;
+
+	   }
+	   ion-select {
+	   	    padding-left: 0px!important;
+
+	   }
+		 .about_plan{
+			 --background: #f4f5f8;
+				--color: #454546;
+				font-weight: 700;
+				text-align: center;
+				margin-bottom: 5px;
+		 }
+
+	}
+	.plan_status{
+		width: 100%;
+		text-align: center;
+	}
